@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#632682">
+<meta name="description" content="ARIES LAB — Applied Research in Software Engineering Laboratory, Institute of Computing, UFBA.">
+<title>ARIES LAB · Applied Research in Software Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --font-heading:'Exo',sans-serif;
+    --font-body:'Raleway',sans-serif;
+
+    /* ---- light theme ---- */
+    --bg:#FAF8FB;
+    --bg-soft:#F2E9F6;
+    --surface:#FFFFFF;
+    --surface-alt:#F6EFFA;
+    --text:#1E1929;
+    --text-muted:#5B5570;
+    --primary:#632682;
+    --primary-strong:#4B1D63;
+    --primary-tint:#D5C5DE;
+    --secondary:#232957;
+    --border:#E4D8ED;
+    --shadow:0 24px 50px -28px rgba(35,41,87,0.32);
+    --line:rgba(99,38,130,0.32);
+    --star:#632682;
+    --chip-bg:#F1E8F6;
+    --chip-text:#4B1D63;
+    --on-dark:#F4EDFA;
+    --ink-invert:#ffffff;
+  }
+  [data-theme="dark"]{
+    --bg:#100C19;
+    --bg-soft:#1A1327;
+    --surface:#1B1526;
+    --surface-alt:#221A31;
+    --text:#F1EAF7;
+    --text-muted:#B2A5C7;
+    --primary:#CB9EE6;
+    --primary-strong:#E9D3F5;
+    --primary-tint:#33274A;
+    --secondary:#8C97DA;
+    --border:#31263F;
+    --shadow:0 25px 60px -25px rgba(0,0,0,0.7);
+    --line:rgba(203,158,230,0.32);
+    --star:#E9D3F5;
+    --chip-bg:#291F3A;
+    --chip-text:#E9D3F5;
+    --on-dark:#F4EDFA;
+    --ink-invert:#100C19;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font-family:var(--font-body);line-height:1.65;-webkit-font-smoothing:antialiased;
+    transition:background .3s ease,color .3s ease;
+  }
+  h1,h2,h3,h4,h5{font-family:var(--font-heading);margin:0;letter-spacing:.008em;}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  ul,ol{margin:0;padding:0;list-style:none;}
+  button{font-family:inherit;}
+  section{position:relative;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  :focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:4px;}
+
+  .skip-link{
+    position:absolute;left:-999px;top:auto;background:var(--primary);color:#fff;
+    padding:10px 18px;border-radius:8px;z-index:999;font-weight:700;font-size:.85rem;
+  }
+  .skip-link:focus{left:16px;top:16px;}
+
+  .eyebrow{
+    font-family:var(--font-heading);font-size:.76rem;font-weight:700;
+    letter-spacing:.2em;text-transform:uppercase;color:var(--primary);
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .eyebrow::before{content:"";width:18px;height:2px;background:var(--primary);display:inline-block;}
+
+  /* ================= HEADER ================= */
+  header{
+    position:sticky;top:0;z-index:100;
+    background:color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter:blur(14px);border-bottom:1px solid var(--border);
+  }
+  .nav-inner{max-width:1180px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
+  
+  .brand-group {display:flex; align-items:center; gap:16px;}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-heading);font-weight:800;font-size:1.08rem;letter-spacing:.03em;}
+  .divider {width:1px; height:36px; background:var(--border);}
+
+  nav.primary-nav{display:flex;align-items:center;gap:2px;}
+  nav.primary-nav .navlink{
+    font-size:.88rem;font-weight:600;color:var(--text-muted);padding:9px 13px;border-radius:20px;transition:.2s;
+  }
+  nav.primary-nav .navlink:hover{color:var(--primary);background:var(--chip-bg);}
+
+  .controls{display:flex;align-items:center;gap:10px;}
+  .lang-toggle{display:flex;background:var(--chip-bg);border-radius:20px;padding:3px;border:1px solid var(--border);}
+  .lang-toggle button{
+    border:none;background:transparent;color:var(--text-muted);font-size:.74rem;font-weight:700;
+    letter-spacing:.04em;padding:6px 11px;border-radius:16px;cursor:pointer;transition:.2s;
+  }
+  .lang-toggle button.active{background:var(--primary);color:#fff;}
+  .icon-btn{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--border);background:var(--surface);
+    color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;
+  }
+  .icon-btn:hover{border-color:var(--primary);color:var(--primary);}
+  .icon-btn svg{width:16px;height:16px;}
+  .icon-btn .moon{display:none;}
+  [data-theme="dark"] .icon-btn .sun{display:none;}
+  [data-theme="dark"] .icon-btn .moon{display:block;}
+  .menu-toggle{display:none;}
+
+  /* ================= HERO ================= */
+  .hero{
+    padding:88px 0 90px;overflow:hidden;position:relative;
+    background:
+      radial-gradient(ellipse 900px 460px at 88% -12%, color-mix(in srgb, var(--primary) 20%, transparent), transparent 65%),
+      radial-gradient(ellipse 650px 460px at -8% 30%, color-mix(in srgb, var(--secondary) 16%, transparent), transparent 60%);
+  }
+  .hero-grid{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:850px;margin:0 auto;}
+  .hero h1{
+    font-size:clamp(2.3rem,4.4vw,3.5rem);font-weight:800;line-height:1.08;margin:16px 0 20px;
+  }
+  .hero h1 em{
+    font-style:normal;
+    background:linear-gradient(120deg,var(--secondary),var(--primary) 70%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.desc{color:var(--text-muted);font-size:1.05rem;max-width:56ch;margin:0 auto 34px auto;}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:30px;
+    font-weight:700;font-size:.9rem;cursor:pointer;border:1px solid transparent;transition:.2s;
+  }
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-primary:hover{background:var(--primary-strong);transform:translateY(-1px);}
+  [data-theme="dark"] .btn-primary{color:var(--ink-invert);}
+  .btn-ghost{background:transparent;border-color:var(--border);color:var(--text);}
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary);}
+
+  /* ================= COLLAB STRIP ================= */
+  .collab{padding:56px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);}
+  .collab-inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:28px;}
+  .collab h2{font-size:1.3rem;font-weight:700;margin-bottom:6px;}
+  .collab p{color:var(--text-muted);max-width:62ch;font-size:.95rem;margin:0 auto;}
+  .uni-list{display:flex;gap:48px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:10px;}
+  .uni-logo{height:64px;width:auto;opacity:0.6;transition:all .3s ease;filter:grayscale(100%);display:block;}
+  .uni-logo:hover{opacity:1;filter:grayscale(0%);transform:scale(1.05);}
+  [data-theme="dark"] .uni-logo{opacity:0.8;filter:grayscale(100%) drop-shadow(0px 0px 10px rgba(255,255,255,0.25));}
+  [data-theme="dark"] .uni-logo:hover{opacity:1;filter:grayscale(0%) drop-shadow(0px 0px 15px rgba(255,255,255,0.4));}
+
+  .sponsorship{padding:56px 0;border-bottom:1px solid var(--border);}
+  .sponsorship-inner{text-align:center;}
+  .sponsor-list{display:flex;gap:44px;flex-wrap:wrap;align-items:center;justify-content:center;margin-top:32px;}
+  .sponsor-logo{height:52px;width:auto;max-width:180px;object-fit:contain;opacity:.75;transition:.3s;}
+  .sponsor-logo:hover{opacity:1;transform:scale(1.05);}
+  [data-theme="dark"] .sponsor-logo{background:#fff;padding:6px 12px;border-radius:8px;}
+
+  /* ================= SECTION HEAD ================= */
+  .section-head{max-width:66ch;margin-bottom:40px;}
+  .section-head h2{font-size:clamp(1.7rem,2.8vw,2.25rem);font-weight:800;margin-top:10px;line-height:1.15;}
+  .section-head p{color:var(--text-muted);margin-top:14px;font-size:1rem;}
+
+  /* ================= RESEARCH LINES ================= */
+  .lines{padding:84px 0;background:var(--bg-soft);}
+  .interest-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;}
+  .interest-card{flex:0 1 calc((100% - 40px) / 3); background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px 22px;transition:.25s; min-width:280px;}
+  .interest-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--primary-tint);}
+  .interest-card .icon{width:36px;height:36px;color:var(--primary);margin-bottom:12px;}
+  .interest-card h3{font-size:1.05rem;font-weight:700;margin:9px 0 7px;}
+  .interest-card p{color:var(--text-muted);font-size:.88rem;}
+
+  /* ================= PEOPLE ================= */
+  .people{padding:84px 0;}
+  .people-tabs{display:flex;justify-content:center;gap:12px;margin-bottom:36px;flex-wrap:wrap;}
+  .people-tab-btn{
+    background:var(--surface-alt);border:1px solid var(--border);color:var(--text-muted);
+    font-weight:700;font-size:.85rem;padding:10px 18px;border-radius:24px;cursor:pointer;
+    transition:.2s;
+  }
+  .people-tab-btn:hover{border-color:var(--primary);color:var(--primary);}
+  .people-tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+  [data-theme="dark"] .people-tab-btn.active{color:var(--ink-invert);}
+
+  .people-group{display:none;animation:fadeIn .4s ease;}
+  .people-group.active{display:block;}
+  .people-group h3{display:none;}
+  @keyframes fadeIn {
+    from{opacity:0;transform:translateY(10px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+
+  .people-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:18px;}
+  .person-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center;transition:.2s;}
+  .person-card:hover{border-color:var(--primary);box-shadow:var(--shadow);}
+  
+  .person-card .avatar{
+    width:68px;height:68px;border-radius:50%;margin:0 auto 10px;
+    border:2px solid var(--primary-tint);background:var(--surface-alt);
+    display:flex;align-items:center;justify-content:center;color:var(--text-muted);
+  }
+  .person-card .avatar svg{width:36px;height:36px;fill:currentColor;}
+
+  .person-card h4{font-size:.9rem;font-weight:700;}
+  .person-card .aff{font-size:.72rem;color:var(--text-muted);margin-top:2px;letter-spacing:.02em;}
+  .person-links{display:flex;justify-content:center;gap:5px;margin-top:9px;flex-wrap:wrap;}
+  .person-links a{font-size:.64rem;font-weight:700;background:var(--chip-bg);color:var(--chip-text);padding:3px 8px;border-radius:9px;transition:.2s;}
+  .person-links a:hover{background:var(--primary);color:#fff;}
+
+  .former-list{display:flex;flex-wrap:wrap;gap:9px;}
+  .former-chip{background:var(--surface-alt);border:1px solid var(--border);border-radius:20px;padding:8px 15px;font-size:.83rem;}
+  .former-chip .aff-tag{color:var(--text-muted);font-size:.72rem;margin-left:4px;}
+
+  /* ================= PRODUCTION / PUBLICATIONS ================= */
+  .production{padding:84px 0;background:var(--bg-soft);}
+
+  .chart-panel{
+    display:grid;grid-template-columns:1.4fr 1fr;gap:28px;margin-bottom:52px;
+  }
+  .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px 26px 20px;}
+  .chart-card h4{font-size:.92rem;font-weight:700;margin-bottom:4px;}
+  .chart-card .sub{font-size:.78rem;color:var(--text-muted);margin-bottom:20px;}
+  .bars{display:flex;align-items:flex-end;gap:10px;height:150px;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+  .bar-col .bar{
+    width:100%;max-width:34px;border-radius:6px 6px 3px 3px;
+    background:linear-gradient(180deg,var(--primary),var(--secondary));
+    position:relative;transition:.3s;
+  }
+  .bar-col .val{font-size:.68rem;font-weight:700;color:var(--text-muted);margin-bottom:6px;}
+  .bar-col .yr{font-size:.68rem;color:var(--text-muted);margin-top:8px;font-weight:600;}
+
+  .donut-wrap{display:flex;align-items:center;gap:22px;}
+  .donut-wrap svg{flex-shrink:0;}
+  .legend{display:flex;flex-direction:column;gap:10px;}
+  .legend .item{display:flex;align-items:center;gap:9px;font-size:.82rem;color:var(--text-muted);}
+  .legend .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+  .legend .item strong{color:var(--text);}
+
+  .pub-controls{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    gap:10px 20px;margin-bottom:6px;border-bottom:1px solid var(--border);
+  }
+  .pub-tabs{display:flex;gap:22px;flex-wrap:wrap;}
+  .tab-btn{
+    background:transparent;border:none;padding:11px 2px;font-family:var(--font-heading);font-weight:700;
+    font-size:.9rem;color:var(--text-muted);cursor:pointer;position:relative;top:1px;
+    border-bottom:3px solid transparent;transition:.2s;
+  }
+  .tab-btn.active{color:var(--primary);border-color:var(--primary);}
+
+  .pub-search-wrap{position:relative;display:flex;align-items:center;margin-bottom:10px;}
+  .pub-search-wrap svg{position:absolute;left:13px;width:14px;height:14px;color:var(--text-muted);pointer-events:none;}
+  .pub-search{
+    font-family:var(--font-body);background:var(--surface);border:1px solid var(--border);
+    border-radius:20px;padding:9px 34px 9px 34px;font-size:.83rem;color:var(--text);
+    width:230px;max-width:60vw;transition:.2s;
+  }
+  .pub-search:focus{outline:none;border-color:var(--primary);}
+  .pub-search::placeholder{color:var(--text-muted);}
+  .pub-search-clear{
+    position:absolute;right:8px;background:none;border:none;cursor:pointer;
+    color:var(--text-muted);font-size:1rem;line-height:1;padding:4px;display:none;
+  }
+  .pub-search-clear:hover{color:var(--primary);}
+  .pub-search-wrap.has-value .pub-search-clear{display:block;}
+
+  .pub-empty{display:none;text-align:center;padding:34px 10px;color:var(--text-muted);font-size:.88rem;}
+
+  .pub-list{margin-top:26px;}
+  .pub-year{font-family:var(--font-heading);font-weight:800;color:var(--primary);font-size:1.02rem;margin:28px 0 12px;}
+  .pub-year:first-child{margin-top:0;}
+  .pub-year-group.older{display:none;}
+  .pub-entry{
+    background:var(--surface);border:1px solid var(--border);border-radius:12px;
+    padding:15px 17px;margin-bottom:9px;font-size:.88rem;color:var(--text-muted);
+  }
+  .pub-entry strong{color:var(--text);font-weight:700;}
+  .pub-entry .venue{display:block;margin-top:4px;font-size:.8rem;color:var(--primary);}
+  .pub-entry[data-hidden="true"]{display:none;}
+  .show-more-wrap{text-align:center;margin-top:28px;}
+
+  .subsection{margin-top:76px;}
+  .subsection-head{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:28px;flex-wrap:wrap;}
+  .subsection-head h3{font-size:1.35rem;font-weight:800;}
+  .subsection-head p{color:var(--text-muted);font-size:.9rem;max-width:52ch;}
+
+  .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;}
+  .tool-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:.2s;}
+  .tool-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+  .tool-thumb{height:118px;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;padding:16px;}
+  .tool-thumb img{max-height:80px;width:auto;margin:0 auto;}
+  .tool-body{padding:18px;flex:1;display:flex;flex-direction:column;}
+  .tool-body h4{font-size:1rem;font-weight:700;margin-bottom:7px;}
+  .tool-body p{font-size:.85rem;color:var(--text-muted);flex:1;}
+  .tool-body a.tool-link{margin-top:12px;font-weight:700;font-size:.8rem;color:var(--primary);display:inline-flex;align-items:center;gap:5px;}
+
+  .awards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:20px;}
+  .award-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+  .award-card img{width:100%;height:140px;object-fit:cover;}
+  .award-body{padding:18px;}
+  .award-body p{font-size:.88rem;color:var(--text-muted);}
+  .award-body p strong{color:var(--text);}
+  .award-body a{margin-top:9px;display:inline-block;font-weight:700;color:var(--primary);font-size:.82rem;}
+
+  /* ================= PROJECTS ================= */
+  .projects{padding:84px 0;}
+  .project-feature{
+    display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;
+    background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:34px 32px;
+  }
+  .project-feature .ic{
+    width:58px;height:58px;border-radius:14px;flex-shrink:0;
+    background:var(--chip-bg);display:flex;align-items:center;justify-content:center;color:var(--primary);
+  }
+  .project-feature .ic svg{width:28px;height:28px;}
+  .project-feature h3{font-size:1.15rem;font-weight:700;margin-bottom:8px;}
+  .project-feature p{color:var(--text-muted);font-size:.92rem;max-width:60ch;}
+
+  /* ================= CTA BAND ================= */
+  .cta-band{
+    padding:80px 0;text-align:center;
+    background:linear-gradient(120deg,var(--secondary),var(--primary-strong));
+    color:var(--on-dark);
+  }
+  .cta-band .eyebrow{color:var(--primary-tint);}
+  .cta-band .eyebrow::before{background:var(--primary-tint);}
+  .cta-band h2{font-size:clamp(1.7rem,3.2vw,2.5rem);font-weight:800;margin:16px auto 16px;max-width:26ch;line-height:1.15;}
+  .cta-band p{opacity:.85;max-width:52ch;margin:0 auto 30px;font-size:1rem;}
+  .cta-band .btn-primary{background:#fff;color:var(--primary-strong);}
+  .cta-band .btn-primary:hover{background:var(--primary-tint);}
+  .cta-band .btn-ghost{border-color:rgba(255,255,255,.4);color:#fff;}
+  .cta-band .btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,.08);}
+  .cta-band .cta-row{justify-content:center;}
+
+  /* ================= FOOTER ================= */
+  footer{border-top:1px solid var(--border);padding:60px 0 28px;background:var(--bg-soft);}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:36px;margin-bottom:40px;}
+  .footer-brand .brand{margin-bottom:12px;}
+  .footer-brand p{color:var(--text-muted);font-size:.86rem;max-width:34ch;}
+  .footer-links h5{font-size:.76rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:14px;}
+  .footer-links a{display:block;font-size:.88rem;padding:5px 0;color:var(--text);}
+  .footer-links a:hover{color:var(--primary);}
+  .footer-contact address{font-style:normal;font-size:.86rem;color:var(--text-muted);line-height:1.7;}
+  .footer-contact a.mail{color:var(--primary);font-weight:700;display:inline-block;margin-bottom:10px;}
+  .footer-contact a.map-link{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-weight:700;color:var(--primary);font-size:.84rem;}
+  .footer-bottom{
+    border-top:1px solid var(--border);padding-top:20px;font-size:.78rem;color:var(--text-muted);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  }
+
+  /* ================= RESPONSIVE ================= */
+  @media (max-width:960px){
+    .interest-card{flex:0 1 calc((100% - 20px) / 2);}
+    .collab-inner{grid-template-columns:1fr;}
+    .chart-panel{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr 1fr;}
+    .project-feature{grid-template-columns:1fr;text-align:center;}
+    .project-feature .ic{margin:0 auto;}
+  }
+  @media (max-width:680px){
+    nav.primary-nav{display:none;}
+    .menu-toggle{
+      display:flex;width:34px;height:34px;border-radius:50%;border:1px solid var(--border);
+      background:var(--surface);align-items:center;justify-content:center;cursor:pointer;
+    }
+    .menu-toggle svg{width:16px;height:16px;}
+    nav.primary-nav.open{
+      display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;
+      background:var(--surface);border-bottom:1px solid var(--border);padding:10px 24px 18px;gap:2px;
+    }
+    .interest-card{flex:0 1 100%;}
+    .wrap{padding:0 20px;}
+    .nav-inner{padding:12px 20px;}
+    .footer-grid{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
+</style>
+</head>
+<body data-theme="light">
+
+<!-- Molde Avatar Default -->
+<svg style="display: none;">
+  <symbol id="default-avatar" viewBox="0 0 24 24">
+    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+  </symbol>
+</svg>
+
+<a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
+<header>
+  <div class="nav-inner">
+    <div class="brand-group">
+      <a href="#" class="brand" aria-label="ARIES LAB Home">
+        <svg style="height: 38px; width: auto;" id="Camada_1" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 682.73 193.59">
+          <path fill="#242956" d="M127.82,163.89l-17.95-36.07a2.11,2.11,0,0,0-2.8-1l0,0L98.52,131l-1.29-2.6L103,125.6a2.23,2.23,0,0,0,1-2.78l-4-10.36a47.43,47.43,0,0,0,9.4-10.92l10.71,2.5a2.16,2.16,0,0,0,2.55-1.42l5.4-16a2.18,2.18,0,0,0-1.18-2.69l-10.07-4.45a49.08,49.08,0,0,0-.89-14.36l9.33-5.84a2.23,2.23,0,0,0,.85-2.84l-7.55-15.17a2.23,2.23,0,0,0-2.78-1l-10.38,4A47.16,47.16,0,0,0,94.47,34.8L97,24.09a2.17,2.17,0,0,0-1.42-2.55L79.64,16.11A2.18,2.18,0,0,0,77,17.29L72.49,27.37a48.83,48.83,0,0,0-14.37.9L52.29,19a2.08,2.08,0,0,0-2.77-.72l-15.2,7.56a2.1,2.1,0,0,0-1.09,2.65l3.93,10.29a46.93,46.93,0,0,0-9.41,10.9L17,47.12a2.17,2.17,0,0,0-2.56,1.42l-5.4,16a2.16,2.16,0,0,0,1.18,2.68l10.07,4.46a49,49,0,0,0,.89,14.35L11.74,92a2.24,2.24,0,0,0-.85,2.84L18.45,110a2.22,2.22,0,0,0,2.77,1l10.39-4a47.35,47.35,0,0,0,10.93,9.37L40,127.12a2.18,2.18,0,0,0,1.43,2.56L57.52,135a2.16,2.16,0,0,0,2.67-1.18l4.47-10.08a48.85,48.85,0,0,0,14.37-.9l5.88,9.43a2.23,2.23,0,0,0,2.84.85l5.59-2.78L94.63,133l-8.5,4.23a2.13,2.13,0,0,0-.94,2.84l0,0,18,36.08a13.77,13.77,0,0,0,24.65-12.27ZM56,114.07l-.15-.06-.15,0a40.38,40.38,0,1,1,.3.1Z"/><path fill="#642682" d="M99.42,102.31l-11.94,0L82,91.38,68.88,65.07l-13,26.38-5.43,11-11.94,0,5.43-11L68.81,40.91,93.94,91.34Z"/><path fill="#642682" d="M186.29,91.19l5.49,11-11.94,0-5.48-11-5.75-11.49-.26-.53a10.5,10.5,0,0,0-9-5.24l-10.66,0,.08,28.28-10.66,0-.17-61.48,37.69-.1a15.77,15.77,0,0,1,11.36,4.79,17.12,17.12,0,0,1,4.72,11.76,16.68,16.68,0,0,1-9.34,15.13,13.84,13.84,0,0,1-4.6,1.33ZM175.64,62.94a4.88,4.88,0,0,0,2.22-.54,5.56,5.56,0,0,0,3.22-5.1,5.87,5.87,0,0,0-1.63-4,5.3,5.3,0,0,0-3.84-1.57l-27,.08,0,11.33Z"/><path fill="#642682" d="M224,102l-.17-61.47,10.66,0,.17,61.48Z"/><path fill="#642682" d="M276.75,56.92l0,5.71,38.37-.11,0,11-38.38.11,0,11.59a5.58,5.58,0,0,0,5.48,5.61l43.57-.12,0,11-43.57.13c-8.87,0-16.06-7.42-16.08-16.56L266.18,57c0-9.13,7.12-16.62,16-16.64l43.58-.12,0,11-43.57.12A5.58,5.58,0,0,0,276.75,56.92Z"/><path fill="#642682" d="M405.68,57v-.35a5.56,5.56,0,0,0-5.47-5.6L376,51.11a5.59,5.59,0,0,0-5.44,5.64v.35A5.58,5.58,0,0,0,376,62.71l21.49-.06a18.47,18.47,0,0,1,13.92,6.28c.26.27.43.53.69.79A19.87,19.87,0,0,1,416.42,82c0,10.72-8.39,19.44-18.8,19.47l-18.67,0c-10.41,0-18.87-8.64-18.9-19.36l10.66,0a8.31,8.31,0,0,0,8.21,8.41l18.67-.05a8.43,8.43,0,0,0,0-16.86l-21.5.06a15.73,15.73,0,0,1-11.18-4.63,15.19,15.19,0,0,1-2.05-2.63A16.64,16.64,0,0,1,360,57v-.35c0-9.13,7.11-16.62,16-16.64L400.18,40a16.4,16.4,0,0,1,16.16,16.56v.35Z"/><path fill="#242956" d="M491.36,91.57l0,11-30.28.08a18.08,18.08,0,0,1-8.36-2,19.25,19.25,0,0,1-8.64-8.94,19.64,19.64,0,0,1-2-8.6L442,41.21l10.66,0,.12,42.95a8.64,8.64,0,0,0,7.27,7.44Z"/><path fill="#242956" d="M574.53,102.23l-11.94,0-5.49-11L544,65,531,91.37l-5.42,11-11.94,0,5.42-11,24.85-50.57L569,91.27Z"/><path fill="#242956" d="M656.33,82.42c0,10.8-8.47,19.61-19,19.64l-40.68.11-.17-61.48,37.61-.1a16.39,16.39,0,0,1,16.16,16.55,16.65,16.65,0,0,1-2.53,9A19.76,19.76,0,0,1,656.33,82.42ZM607.24,62.88l27-.07a5.62,5.62,0,0,0,0-11.24l-27,.07ZM637.34,91a8.61,8.61,0,0,0-.05-17.21l-30,.08.05,17.3,30-.08Z"/><path fill="#242956" d="M144.06,123.82a1,1,0,0,1,1-.75h1.33a1,1,0,0,1,1,.74l6.48,17.77c.23.63-.08,1-.74,1h-.94a1,1,0,0,1-1-.75L149.46,137l-7.38,0-1.71,4.89a1,1,0,0,1-1,.75h-.94c-.69,0-1-.41-.75-1Zm4.67,10.92-2.18-6.21c-.34-1-.76-2.77-.76-2.77h0s-.44,1.78-.77,2.78l-2.18,6.22Z"/><path fill="#242956" d="M156.35,129.5a.81.81,0,0,1,.91-.92h.64c.61,0,.92.31.92.78v.83a5.57,5.57,0,0,1,0,.75h0a5.09,5.09,0,0,1,4.71-2.71c3.77,0,6.17,3,6.18,7.34s-2.67,7.36-6.33,7.37a4.82,4.82,0,0,1-4.37-2.49h0a8.53,8.53,0,0,1,.08,1.22l0,5.58a.8.8,0,0,1-.89.92h-.86a.8.8,0,0,1-.91-.91Zm6.6,11.11c2.22,0,4.05-1.82,4-5s-1.65-5-4-5c-2.11,0-4,1.48-4,5.06C159,138.15,160.37,140.62,163,140.61Z"/><path fill="#242956" d="M172.78,129.46a.8.8,0,0,1,.91-.92h.64c.61,0,.91.3.91.77v.83a4.66,4.66,0,0,1-.06.75h.06a5.07,5.07,0,0,1,4.71-2.7c3.77,0,6.16,3,6.18,7.33s-2.67,7.36-6.34,7.37a4.79,4.79,0,0,1-4.36-2.48h-.05a8.53,8.53,0,0,1,.08,1.22l0,5.58a.8.8,0,0,1-.89.91h-.86a.82.82,0,0,1-.92-.92Zm6.6,11.1c2.22,0,4.05-1.81,4-5s-1.65-5-4-5c-2.11,0-4.05,1.48-4,5.06C175.41,138.11,176.8,140.57,179.38,140.56Z"/><path fill="#242956" d="M189.16,123.86a.81.81,0,0,1,.91-.92h.86a.82.82,0,0,1,.92.92l0,14.51c0,1.58.7,1.8,1.28,1.85a.74.74,0,0,1,.73.8v.67a.82.82,0,0,1-.94.94c-1.5,0-3.75-.4-3.76-3.92Z"/><path fill="#242956" d="M196.4,124.76v-.92a.81.81,0,0,1,.92-.91h.94a.83.83,0,0,1,.92.91v.92a.83.83,0,0,1-.91.92h-1A.83.83,0,0,1,196.4,124.76Zm0,4.63a.82.82,0,0,1,.91-.92h.86a.81.81,0,0,1,.92.91l0,12.21a.81.81,0,0,1-.91.92h-.86a.82.82,0,0,1-.92-.91Z"/><path fill="#242956" d="M209.15,128.11c3.88,0,6.06,2.76,6.07,6.67a.93.93,0,0,1-.94.94l-9.38,0a4.73,4.73,0,0,0,4.87,4.73,5.76,5.76,0,0,0,3.35-1.12.82.82,0,0,1,1.25.3l.25.42a.82.82,0,0,1-.27,1.22,8.27,8.27,0,0,1-4.74,1.51,7.15,7.15,0,0,1-7.46-7.33C202.14,131,205.16,128.12,209.15,128.11Zm3.37,5.84c-.09-2.47-1.56-3.74-3.42-3.73A4.13,4.13,0,0,0,205,134Z"/><path fill="#242956" d="M223.64,128.07a4.76,4.76,0,0,1,4.36,2.4h.05a5.6,5.6,0,0,1-.08-.94l0-5.77a.82.82,0,0,1,.92-.92h.86a.8.8,0,0,1,.91.91l.05,17.75a.81.81,0,0,1-.91.92h-.72c-.61,0-.92-.3-.92-.85v-.81a4.66,4.66,0,0,1,.05-.69h-.05a5,5,0,0,1-4.63,2.7c-3.8,0-6.2-3-6.21-7.33S219.92,128.08,223.64,128.07Zm.39,12.37c2.08,0,4.05-1.48,4-5.06,0-2.5-1.32-5-4-4.95-2.19,0-4,1.81-4,5S221.7,140.45,224,140.44Z"/><path fill="#242956" d="M242.05,123.72a.81.81,0,0,1,.92-.92l5.27,0a8.62,8.62,0,0,1,3.66.52,5.32,5.32,0,0,1,3.09,5.13,5.46,5.46,0,0,1-3.48,5.39v.05a5.41,5.41,0,0,1,.59.89l3.54,6.51c.36.64.08,1.08-.61,1.08h-1.11a1.06,1.06,0,0,1-1.08-.63L249,134.57H244.8l0,6.88a.81.81,0,0,1-.91.92H243a.8.8,0,0,1-.92-.91Zm6.68,8.47a3.35,3.35,0,0,0,3.49-3.65,3.08,3.08,0,0,0-1.84-3,5.49,5.49,0,0,0-2.33-.33h-3.27v7Z"/><path fill="#242956" d="M264.51,128c3.89,0,6.06,2.76,6.07,6.67a.94.94,0,0,1-.94.95l-9.38,0a4.74,4.74,0,0,0,4.87,4.73,5.77,5.77,0,0,0,3.35-1.12c.53-.28.95-.23,1.25.3l.25.42a.82.82,0,0,1-.27,1.22,8.39,8.39,0,0,1-4.74,1.51,7.16,7.16,0,0,1-7.46-7.33C257.5,130.86,260.52,128,264.51,128Zm3.38,5.85c-.09-2.47-1.57-3.74-3.43-3.74a4.13,4.13,0,0,0-4.09,3.76Z"/><path fill="#242956" d="M272.79,139.86l.27-.39c.37-.47.73-.5,1.28-.19a6.15,6.15,0,0,0,3.44,1.12c1.39,0,2.39-.67,2.38-1.86,0-2.75-7.24-1.81-7.25-6.56,0-2.66,2.31-4,5.06-4.06a7.07,7.07,0,0,1,3.89,1.07.8.8,0,0,1,.31,1.22l-.25.42c-.28.5-.69.55-1.22.3a5.56,5.56,0,0,0-2.86-.79c-1.33,0-2.36.59-2.35,1.78,0,2.8,7.24,1.78,7.26,6.55,0,2.39-2,4.14-5,4.15a7.79,7.79,0,0,1-4.72-1.51A.82.82,0,0,1,272.79,139.86Z"/><path fill="#242956" d="M291.82,127.88c3.88,0,6.05,2.76,6.06,6.67a.92.92,0,0,1-.93.94l-9.38,0a4.73,4.73,0,0,0,4.87,4.73,5.76,5.76,0,0,0,3.35-1.12.82.82,0,0,1,1.25.3l.25.42a.82.82,0,0,1-.27,1.22,8.3,8.3,0,0,1-4.74,1.51,7.15,7.15,0,0,1-7.46-7.33C284.81,130.78,287.82,127.89,291.82,127.88Zm3.37,5.84c-.09-2.47-1.56-3.74-3.42-3.73a4.13,4.13,0,0,0-4.1,3.75Z"/><path fill="#242956" d="M308.07,133.55h.72v-.36c0-2.31-1.34-3.08-3.06-3.07a6.47,6.47,0,0,0-3.16.89.86.86,0,0,1-1.25-.33l-.22-.38a.83.83,0,0,1,.3-1.25,9.18,9.18,0,0,1,4.54-1.21c3.5,0,5.53,1.93,5.54,5.48l0,8a.82.82,0,0,1-.91.92h-.7a.81.81,0,0,1-.91-.91v-.83a3.74,3.74,0,0,1,.09-.87H309a5.22,5.22,0,0,1-4.57,3c-2.47,0-4.72-1.52-4.73-4.15C299.69,134,305.16,133.56,308.07,133.55Zm-3,6.86c2.36,0,3.8-2.4,3.79-4.48v-.61h-.72c-2,0-5.69.19-5.68,2.85A2.35,2.35,0,0,0,305,140.41Z"/><path fill="#242956" d="M315.16,129.06a.83.83,0,0,1,.91-.92h.78a.81.81,0,0,1,.92.91v1.61a7,7,0,0,1-.08,1.06h.06c.6-1.86,2.18-3.7,4.29-3.7.64,0,.89.3.89.91v.78c0,.61-.36.91-1,.92-2.74,0-4.07,3-4.06,5.75l0,4.88a.82.82,0,0,1-.92.92h-.86a.83.83,0,0,1-.92-.91Z"/><path fill="#242956" d="M331.09,127.77a7.46,7.46,0,0,1,4.63,1.48.8.8,0,0,1,.17,1.25l-.27.42a.81.81,0,0,1-1.25.23,5.39,5.39,0,0,0-3.14-1.05,4.78,4.78,0,0,0-4.87,5,4.85,4.85,0,0,0,4.95,5,5.91,5.91,0,0,0,3.58-1.28.78.78,0,0,1,1.25.24l.22.42a.83.83,0,0,1-.25,1.22,7.77,7.77,0,0,1-5,1.73,7.35,7.35,0,1,1,0-14.7Z"/><path fill="#242956" d="M339.26,123.45a.81.81,0,0,1,.91-.92H341a.8.8,0,0,1,.89.91l0,6.35a8.21,8.21,0,0,1-.08,1.17h.06a5.79,5.79,0,0,1,5.23-3.23c3.3,0,4.83,1.79,4.84,5.36l0,8.08a.83.83,0,0,1-.92.92h-.86a.82.82,0,0,1-.92-.92l0-7.46c0-2-.42-3.52-2.67-3.51-2.69,0-4.68,2.23-4.67,5.25v5.74a.8.8,0,0,1-.88.92h-.86a.82.82,0,0,1-.92-.92Z"/><path fill="#242956" d="M362.57,124.3v-.92a.81.81,0,0,1,.91-.92h.95a.82.82,0,0,1,.91.92v.91a.84.84,0,0,1-.92.92h-.94A.82.82,0,0,1,362.57,124.3Zm0,4.63a.82.82,0,0,1,.92-.92h.86a.8.8,0,0,1,.91.91l0,12.21a.81.81,0,0,1-.92.92h-.86a.81.81,0,0,1-.91-.91Z"/><path fill="#242956" d="M369.19,128.91a.83.83,0,0,1,.91-.92h.78a.82.82,0,0,1,.92.92v1.24a4.57,4.57,0,0,1-.08.81h.06a5.83,5.83,0,0,1,5.31-3.32c3.31,0,4.81,1.79,4.82,5.37l0,8.07a.81.81,0,0,1-.91.92h-.86a.82.82,0,0,1-.92-.92l0-7.46c0-2-.4-3.52-2.65-3.52-2.72,0-4.68,2.29-4.67,5.2v5.8a.8.8,0,0,1-.91.92h-.86a.83.83,0,0,1-.92-.91Z"/><path fill="#242956" d="M392.11,139l.47-.66c.33-.45.72-.5,1.25-.17a7.31,7.31,0,0,0,4.28,1.57c2.08,0,3.43-1.12,3.43-2.82,0-4.32-9.44-3.33-9.46-9.43,0-3.3,2.76-5.45,6.34-5.45a8.46,8.46,0,0,1,4.91,1.48.88.88,0,0,1,.28,1.25l-.38.69c-.33.59-.78.53-1.25.25a6.8,6.8,0,0,0-3.61-1.12c-2,0-3.52,1.06-3.52,2.75,0,4.22,9.44,3.06,9.46,9.36,0,3.07-2.28,5.58-6.2,5.59a9.67,9.67,0,0,1-5.88-2A.84.84,0,0,1,392.11,139Z"/><path fill="#242956" d="M414.06,127.54a7.35,7.35,0,1,1-7.53,7.35A7.32,7.32,0,0,1,414.06,127.54Zm0,12.37a5,5,0,1,0-4.84-5A4.84,4.84,0,0,0,414.09,139.91Z"/><path fill="#242956" d="M425.11,130.17h-.89a.85.85,0,0,1-.92-.92v-.36a.84.84,0,0,1,.92-.92h.88v-.66a4.86,4.86,0,0,1,5.06-5.18h.34a.83.83,0,0,1,.92.91v.53c0,.61-.33.86-1,.92-1,.06-2.66.31-2.66,2.92V128h2.42a.84.84,0,0,1,.92.91v.36a.84.84,0,0,1-.92.92H427.8l0,10.79a.81.81,0,0,1-.91.92h-.86a.82.82,0,0,1-.92-.92Z"/><path fill="#242956" d="M434.1,130.15h-1a.81.81,0,0,1-.89-.91v-.36a.82.82,0,0,1,.91-.92h1v-3.08a.82.82,0,0,1,.91-.92h.81a.81.81,0,0,1,.92.91V128h2.44a.83.83,0,0,1,.92.92v.36a.81.81,0,0,1-.89.91h-2.47l0,6.24c0,2.67,1.64,3.08,2.67,3.16.72.05,1,.27,1,.91V141c0,.64-.36.92-1.11.92-2.78,0-5.22-1.59-5.23-5.14Z"/><path fill="#242956" d="M441.62,128.82c-.2-.63.11-1,.77-1h.92a1,1,0,0,1,1,.78l2.77,9.06c.19.72.33,1.5.33,1.5h.06s.16-.78.38-1.5l2.81-9a.92.92,0,0,1,1-.78h.86a1,1,0,0,1,1,.78l2.86,9c.2.72.36,1.49.36,1.49h.06a15,15,0,0,1,.36-1.5l2.72-9.08a.9.9,0,0,1,1-.78h.92c.66,0,1,.39.78,1L458.69,141a1,1,0,0,1-1,.78H456.3a.94.94,0,0,1-1-.77l-2.71-8.23a11.24,11.24,0,0,1-.39-1.53h-.06a13.22,13.22,0,0,1-.41,1.53L449.06,141a1,1,0,0,1-1,.78h-1.38a1,1,0,0,1-1-.77Z"/><path fill="#242956" d="M472.46,133.09h.72v-.36c0-2.3-1.34-3.07-3.06-3.07a6.36,6.36,0,0,0-3.16.9.86.86,0,0,1-1.25-.33l-.23-.39a.84.84,0,0,1,.31-1.25,9.18,9.18,0,0,1,4.54-1.21c3.5,0,5.53,1.93,5.54,5.48l0,8a.82.82,0,0,1-.91.92h-.7a.81.81,0,0,1-.91-.91V140a3.59,3.59,0,0,1,.09-.86h-.06a5.22,5.22,0,0,1-4.57,3c-2.47,0-4.72-1.51-4.73-4.15C464.08,133.59,469.54,133.1,472.46,133.09Zm-3,6.86c2.36,0,3.8-2.39,3.79-4.47v-.61h-.72c-2,0-5.69.18-5.68,2.84A2.35,2.35,0,0,0,469.42,140Z"/><path fill="#242956" d="M479.55,128.61a.82.82,0,0,1,.91-.92h.78a.81.81,0,0,1,.92.91v1.61a5.7,5.7,0,0,1-.08,1h.06c.6-1.86,2.18-3.69,4.29-3.7.64,0,.89.3.89.92v.77c0,.61-.36.92-1,.92-2.75,0-4.08,3-4.07,5.75l0,4.89a.81.81,0,0,1-.92.91h-.86a.83.83,0,0,1-.92-.92Z"/><path fill="#242956" d="M495.11,127.32c3.89,0,6.06,2.75,6.07,6.66a.94.94,0,0,1-.94,1l-9.38,0a4.74,4.74,0,0,0,4.87,4.73,5.77,5.77,0,0,0,3.35-1.12c.53-.28.95-.23,1.25.3l.25.42a.82.82,0,0,1-.27,1.22,8.39,8.39,0,0,1-4.74,1.51,7.16,7.16,0,0,1-7.46-7.33C488.1,130.22,491.12,127.33,495.11,127.32Zm3.38,5.84c-.09-2.47-1.57-3.74-3.43-3.74a4.13,4.13,0,0,0-4.09,3.76Z"/><path fill="#242956" d="M511.59,123a.8.8,0,0,1,.91-.92l9.54,0a.8.8,0,0,1,.92.91v.55a.82.82,0,0,1-.91.92l-7.74,0,0,6.13h6.13a.83.83,0,0,1,.92.91V132a.82.82,0,0,1-.92.92l-6.13,0,0,6.3,8.21,0a.8.8,0,0,1,.92.91v.55a.81.81,0,0,1-.91.92l-10,0a.8.8,0,0,1-.91-.91Z"/><path fill="#242956" d="M526.28,128.48a.82.82,0,0,1,.91-.92H528a.81.81,0,0,1,.92.91v1.25a4.38,4.38,0,0,1-.08.8h.06a5.83,5.83,0,0,1,5.32-3.31c3.3,0,4.8,1.79,4.81,5.37l0,8.07a.81.81,0,0,1-.91.92h-.86a.82.82,0,0,1-.92-.91l0-7.47c0-2-.4-3.52-2.65-3.51-2.71,0-4.68,2.29-4.67,5.2l0,5.8a.82.82,0,0,1-.92.92h-.86a.83.83,0,0,1-.92-.92Z"/><path fill="#242956" d="M544.89,144.43a8.12,8.12,0,0,0,3.05.61c2.39,0,4.41-1.1,4.4-4v-1.22a5.85,5.85,0,0,1,.08-.89h0a4.41,4.41,0,0,1-4.16,2.39c-3.94,0-6.33-3.09-6.34-7.19s2.2-7,6.25-7c3.46,0,4.39,2.34,4.39,2.34h0a1.62,1.62,0,0,1,0-.44v-.8c0-.48.31-.78.92-.78h.66a.8.8,0,0,1,.92.91l0,12.54c0,4.63-3.54,6.42-6.95,6.43a10.6,10.6,0,0,1-4.08-.77.81.81,0,0,1-.48-1.22l.2-.47A.78.78,0,0,1,544.89,144.43Zm7.49-10.2c0-3.69-1.82-4.74-3.9-4.73-2.52,0-3.87,1.78-3.87,4.56,0,3,1.54,5,4.07,5C550.62,139,552.39,137.87,552.38,134.23Z"/><path fill="#242956" d="M558.88,123.75v-.91a.82.82,0,0,1,.92-.92h.94a.82.82,0,0,1,.92.91v.92a.83.83,0,0,1-.91.91h-1A.82.82,0,0,1,558.88,123.75Zm0,4.64a.82.82,0,0,1,.91-.92h.86a.8.8,0,0,1,.92.91l0,12.21a.8.8,0,0,1-.91.91h-.86a.82.82,0,0,1-.92-.92Z"/><path fill="#242956" d="M565.49,128.37a.82.82,0,0,1,.92-.92h.77a.81.81,0,0,1,.92.91v1.25a4.57,4.57,0,0,1-.08.81h.06a5.82,5.82,0,0,1,5.32-3.32c3.3,0,4.8,1.79,4.81,5.37l0,8.07a.8.8,0,0,1-.91.92h-.86a.82.82,0,0,1-.92-.91l0-7.46c0-2-.4-3.53-2.64-3.52-2.72,0-4.69,2.29-4.68,5.2l0,5.8a.82.82,0,0,1-.92.92h-.86a.81.81,0,0,1-.91-.91Z"/><path fill="#242956" d="M588,127.06c3.88,0,6.06,2.76,6.07,6.67a.93.93,0,0,1-.94.94l-9.38,0a4.73,4.73,0,0,0,4.87,4.73,5.76,5.76,0,0,0,3.35-1.12.82.82,0,0,1,1.25.3l.25.42a.82.82,0,0,1-.27,1.22,8.35,8.35,0,0,1-4.74,1.51,7.15,7.15,0,0,1-7.46-7.33C581,130,584,127.07,588,127.06Zm3.37,5.84c-.09-2.47-1.56-3.74-3.42-3.73a4.13,4.13,0,0,0-4.1,3.75Z"/><path fill="#242956" d="M603.14,127c3.89,0,6.06,2.75,6.07,6.67a.94.94,0,0,1-.94.94l-9.38,0a4.74,4.74,0,0,0,4.87,4.73,5.77,5.77,0,0,0,3.35-1.12c.53-.28.95-.23,1.25.3l.25.42a.82.82,0,0,1-.27,1.22,8.39,8.39,0,0,1-4.74,1.51,7.16,7.16,0,0,1-7.46-7.33C596.13,129.92,599.15,127,603.14,127Zm3.38,5.84c-.09-2.47-1.57-3.74-3.43-3.73a4.11,4.11,0,0,0-4.09,3.75Z"/><path fill="#242956" d="M612.14,128.24a.82.82,0,0,1,.91-.92h.78a.81.81,0,0,1,.92.91v1.61a7.2,7.2,0,0,1-.08,1.06h.06c.6-1.86,2.18-3.7,4.29-3.71.63,0,.89.31.89.92v.77c0,.61-.36.92-1,.92-2.74,0-4.07,3-4.06,5.76v4.88a.8.8,0,0,1-.91.92h-.86a.83.83,0,0,1-.92-.91Z"/><path fill="#242956" d="M622,123.58v-.92a.8.8,0,0,1,.91-.91h.94a.83.83,0,0,1,.92.92v.91a.83.83,0,0,1-.91.92h-.94A.82.82,0,0,1,622,123.58Zm0,4.63a.83.83,0,0,1,.91-.92h.86a.81.81,0,0,1,.92.91l0,12.21a.8.8,0,0,1-.91.92H623a.82.82,0,0,1-.92-.91Z"/><path fill="#242956" d="M628.6,128.19a.81.81,0,0,1,.91-.91h.77a.82.82,0,0,1,.92.92v1.24a4.57,4.57,0,0,1-.08.81h0a5.83,5.83,0,0,1,5.32-3.32c3.3,0,4.8,1.79,4.81,5.37l0,8.08a.8.8,0,0,1-.91.91h-.86a.83.83,0,0,1-.92-.92l0-7.46c0-2-.39-3.52-2.64-3.52-2.72,0-4.68,2.29-4.68,5.2l0,5.8a.81.81,0,0,1-.91.92h-.86a.81.81,0,0,1-.92-.91Z"/><path fill="#242956" d="M647.2,144.15a8,8,0,0,0,3.06.6c2.38,0,4.41-1.09,4.4-3.95v-1.22a4.68,4.68,0,0,1,.08-.89h-.06a4.42,4.42,0,0,1-4.16,2.4c-3.93,0-6.33-3.09-6.34-7.2s2.2-7,6.25-7c3.47,0,4.39,2.34,4.39,2.34h.06a1.44,1.44,0,0,1-.06-.44V128c0-.47.3-.77.91-.78h.67a.8.8,0,0,1,.91.91l0,12.55c0,4.63-3.53,6.41-7,6.42a10.68,10.68,0,0,1-4.08-.76.81.81,0,0,1-.47-1.22l.19-.47A.78.78,0,0,1,647.2,144.15Zm7.5-10.2c0-3.69-1.82-4.74-3.9-4.74-2.53,0-3.88,1.79-3.87,4.56,0,3,1.54,5,4.06,5C652.93,138.75,654.7,137.58,654.7,134Z"/></svg>
+      </a>
+      <div class="divider"></div>
+      <img src="https://raw.githubusercontent.com/arieslab/public-archive/main/ic-aries.svg" alt="IC Logo" style="height: 50px; width: auto;">
+    </div>
+
+    <nav class="primary-nav" id="primaryNav">
+      <a class="navlink" href="#pesquisa" data-i18n="nav.research">Research</a>
+      <a class="navlink" href="#pessoas" data-i18n="nav.people">People</a>
+      <a class="navlink" href="#producao" data-i18n="nav.production">Production</a>
+      <a class="navlink" href="#projetos" data-i18n="nav.projects">Projects</a>
+      <a class="navlink" href="#contato" data-i18n="nav.contact">Contact</a>
+    </nav>
+
+    <div class="controls">
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" id="lang-en" onclick="setLang('en')">EN</button>
+        <button type="button" id="lang-pt" onclick="setLang('pt')">PT-BR</button>
+      </div>
+      <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle light/dark theme">
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7" stroke-linecap="round"/></svg>
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="menu-toggle" type="button" onclick="document.getElementById('primaryNav').classList.toggle('open')" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<!-- ================= HERO ================= -->
+<section class="hero" id="inicio">
+  <div class="wrap hero-grid">
+    <span class="eyebrow" data-i18n="hero.eyebrow">Institute of Computing · UFBA</span>
+    <h1 data-i18n="hero.title">Turning code into <em>evidence</em>, and evidence into better software.</h1>
+    <p class="desc" data-i18n="hero.description">The Applied Research in Software Engineering Laboratory (ARIES LAB) conducts quality academic investigations that bring relevant contributions to the literature and to the software industry — from testing and refactoring to the tools practitioners use every day.</p>
+    <div class="cta-row">
+      <a href="#pesquisa" class="btn btn-primary" data-i18n="hero.cta_research">Explore our research</a>
+      <a href="#pessoas" class="btn btn-ghost" data-i18n="hero.cta_people">Meet the group</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COLLAB STRIP ================= -->
+<section class="collab">
+  <div class="wrap collab-inner">
+    <div>
+      <h2 data-i18n="collab.title">We are a collaborative research group.</h2>
+      <p data-i18n="collab.text">ARIES LAB is a research team at the Institute of Computing at Federal University of Bahia (UFBA), together with the Federal University of Lavras (UFLA) and the State University of Bahia (UNEB).</p>
+    </div>
+    <div class="uni-list">
+      <a href="https://www.ufba.br/" target="_blank" rel="noopener"><img class="uni-logo" src="https://arieslab.github.io/assets/img/universidades/UFBA.png" alt="UFBA"></a>
+      <a href="https://ufla.br/" target="_blank" rel="noopener"><img class="uni-logo" src="https://arieslab.github.io/assets/img/universidades/UFLA.png" alt="UFLA"></a>
+      <a href="https://portal.uneb.br/" target="_blank" rel="noopener"><img class="uni-logo" src="https://arieslab.github.io/assets/img/universidades/uneb.png" alt="UNEB"></a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SPONSORSHIP ================= -->
+<section class="sponsorship">
+  <div class="wrap sponsorship-inner">
+    <div class="section-head">
+      <span class="eyebrow" data-i18n="sponsorship.eyebrow">Funding</span>
+      <h2 data-i18n="sponsorship.title">Our sponsorships.</h2>
+      <p data-i18n="sponsorship.subtitle">ARIES LAB members receive funding from CAPES, FAPESB, CNPq and Tomorrow.</p>
+    </div>
+    <div class="sponsor-list">
+      <img class="sponsor-logo" src="https://arieslab.github.io/assets/img/sponsorship/capes_horizontal.png" alt="CAPES">
+      <img class="sponsor-logo" src="https://arieslab.github.io/assets/img/sponsorship/fapesb.png" alt="FAPESB">
+      <img class="sponsor-logo" src="https://arieslab.github.io/assets/img/sponsorship/CNPq.png" alt="CNPq">
+      <img class="sponsor-logo" src="https://arieslab.github.io/assets/img/sponsorship/logo-tomorrow-site.png" alt="Tomorrow">
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESEARCH LINES ================= -->
+<section class="lines" id="pesquisa">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" data-i18n="interests.eyebrow">Research lines</span>
+      <h2 data-i18n="interests.title">From code quality to sustainable software.</h2>
+      <p data-i18n="interests.subtitle">Our research interest is related to the following topics:</p>
+    </div>
+    <div class="interest-grid">
+      <div class="interest-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+            <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+          </svg>
+        </div>
+        <h3 data-i18n="interests.items.0.title">Empirical Software Engineering</h3>
+        <p data-i18n="interests.items.0.text">Involves the scientific use of quantitative and qualitative data to understand and improve the software.</p>
+      </div>
+      <div class="interest-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <path d="M9 15L11 17L15 13"></path>
+          </svg>
+        </div>
+        <h3 data-i18n="interests.items.1.title">Software Testing</h3>
+        <p data-i18n="interests.items.1.text">Searches related to software testing processes with the aim of improving the quality of the software.</p>
+      </div>
+      <div class="interest-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </div>
+        <h3 data-i18n="interests.items.2.title">Software Evolution</h3>
+        <p data-i18n="interests.items.2.text">Area of Software Engineering that investigates the continual development of systems and their changes.</p>
+      </div>
+      <div class="interest-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            <path d="M12 12v9"></path>
+          </svg>
+        </div>
+        <h3 data-i18n="interests.items.3.title">Mining Software Repositories</h3>
+        <p data-i18n="interests.items.3.text">Analyzes the rich data available in software repositories to uncover interesting facts about software systems, projects, and software engineering.</p>
+      </div>
+      <div class="interest-card">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+        </div>
+        <h3 data-i18n="interests.items.4.title">Sustainable Software Engineering</h3>
+        <p data-i18n="interests.items.4.text">An emerging discipline with principles, philosophies, and competencies to define, develop, and run sustainable software applications.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PEOPLE ================= -->
+<section class="people" id="pessoas">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" data-i18n="people.eyebrow">People</span>
+      <h2 data-i18n="people.title">Science is collective work.</h2>
+      <p data-i18n="people.subtitle">A community of faculty, students and alumni turning questions into knowledge, tools and rigorous software engineering research.</p>
+    </div>
+
+    <!-- Menus das Abas (Tabs) -->
+    <div class="people-tabs" role="tablist">
+      <button class="people-tab-btn active" onclick="switchPeopleTab('faculty')" data-i18n="people.tabs.faculty">Faculty</button>
+      <button class="people-tab-btn" onclick="switchPeopleTab('phd')" data-i18n="people.tabs.phd">Ph.D. Students</button>
+      <button class="people-tab-btn" onclick="switchPeopleTab('msc')" data-i18n="people.tabs.msc">M.Sc. Students</button>
+      <button class="people-tab-btn" onclick="switchPeopleTab('undergrad')" data-i18n="people.tabs.undergrad">Undergraduates</button>
+      <button class="people-tab-btn" onclick="switchPeopleTab('former')" data-i18n="people.tabs.former">Alumni</button>
+    </div>
+
+    <!-- Grupo 1: Docentes -->
+    <div class="people-group active" id="group-faculty">
+      <h3>Faculty</h3>
+      <div class="people-grid">
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Ivan Machado</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:ivanmachado@dcc.ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="http://www.ivanmachado.com.br/" target="_blank" rel="noopener" data-i18n="people.link.site">Website</a>
+            <a href="http://scholar.google.com/citations?user=ilptBWsAAAAJ" target="_blank" rel="noopener">Scholar</a>
+            <a href="http://lattes.cnpq.br/4430958315746203" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Heitor Costa</h4><div class="aff">UFLA</div>
+          <div class="person-links">
+            <a href="mailto:heitor@ufla.br" data-i18n="people.link.email">Email</a>
+            <a href="https://scholar.google.com/citations?user=ojjCcAEAAAAJ&hl=pt-BR" target="_blank" rel="noopener">Scholar</a>
+            <a href="http://lattes.cnpq.br/1320324289662918" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Larissa Soares</h4><div class="aff">UEFS</div>
+          <div class="person-links">
+            <a href="mailto:larissa@ecomp.uefs.br" data-i18n="people.link.email">Email</a>
+            <a href="https://larirsoares.github.io" target="_blank" rel="noopener" data-i18n="people.link.site">Website</a>
+            <a href="https://scholar.google.com/citations?user=Ut6HiuAAAAAJ&hl=pt-BR" target="_blank" rel="noopener">Scholar</a>
+            <a href="http://lattes.cnpq.br/5750570352089990" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grupo 2: Doutorandos -->
+    <div class="people-group" id="group-phd">
+      <h3>Ph.D. Students</h3>
+      <div class="people-grid">
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Joselito Júnior</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:joselito.mota@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="https://scholar.google.com.br/citations?user=Ao0CYVAAAAAJ&hl=pt-BR" target="_blank" rel="noopener">Scholar</a>
+            <a href="http://lattes.cnpq.br/0444919954863596" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Lidia Perside</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:lidianascimento@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="https://scholar.google.com.br/citations?user=1nGQreIAAAAJ&hl=pt-BR&oi=ao" target="_blank" rel="noopener">Scholar</a>
+            <a href="http://lattes.cnpq.br/0248621815801613" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Lucas Lopes</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:lucasfraga@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="https://scholar.google.com/citations?user=AOV1UrMAAAAJ&hl=en" target="_blank" rel="noopener">Scholar</a>
+            <a href="http://lattes.cnpq.br/9912595196198802" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Railana Santana</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:railana.santana@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="https://scholar.google.com/citations?user=QEC1lfsAAAAJ&hl=pt-BR" target="_blank" rel="noopener">Scholar</a>
+            <a href="http://lattes.cnpq.br/9613056483292884" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Tássio Virgínio</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:tassio.virginio@ifto.edu.br" data-i18n="people.link.email">Email</a>
+            <a href="https://tassiovirginio.com" target="_blank" rel="noopener" data-i18n="people.link.site">Website</a>
+            <a href="https://scholar.google.com/citations?user=LW-MIsgAAAAJ&hl=pt-BR&oi=ao" target="_blank" rel="noopener">Scholar</a>
+            <a href="http://lattes.cnpq.br/0517470966104640" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grupo 3: Mestrandos -->
+    <div class="people-group" id="group-msc">
+      <h3>M.Sc. Students</h3>
+      <div class="people-grid">
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Cristiano dos Santos</h4><div class="aff">UFBA</div>
+          <div class="person-links"><a href="http://lattes.cnpq.br/3287436109473076" target="_blank" rel="noopener">Lattes</a></div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Eronildo Júnior</h4><div class="aff">UFBA</div>
+          <div class="person-links"><a href="http://lattes.cnpq.br/6027606525889046" target="_blank" rel="noopener">Lattes</a></div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Paloma Passos</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:palomabcp@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="http://lattes.cnpq.br/5919579995756642" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Paulo Cerqueira</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:cerqueira.paulo@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="http://lattes.cnpq.br/9021636213282115" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grupo 4: Graduação -->
+    <div class="people-group" id="group-undergrad">
+      <h3>Undergraduate Students</h3>
+      <div class="people-grid">
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Eliel Batista</h4><div class="aff">UFBA</div>
+          <div class="person-links"><a href="http://lattes.cnpq.br/1672650716587302" target="_blank" rel="noopener">Lattes</a></div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Letícia Ribeiro</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:leticiabarreto@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="http://lattes.cnpq.br/3430484250485967" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Luis Eduardo</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:luisaraujo@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="http://lattes.cnpq.br/2546788092652017" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Matheus Marçal</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:matheuscpm@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="http://lattes.cnpq.br/6343900218550431" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="avatar"><svg><use href="#default-avatar"></use></svg></div>
+          <h4>Rafael Vieira</h4><div class="aff">UFBA</div>
+          <div class="person-links">
+            <a href="mailto:rafaelvieira@ufba.br" data-i18n="people.link.email">Email</a>
+            <a href="http://lattes.cnpq.br/3646783926906720" target="_blank" rel="noopener">Lattes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grupo 5: Ex-membros -->
+    <div class="people-group" id="group-former">
+      <h3>Alumni</h3>
+      <div class="former-list">
+        <span class="former-chip">Adriana Cruz <span class="aff-tag">UFLA</span></span>
+        <span class="former-chip">Brunna Caroline <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Caiza Fortunato <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Daniel David <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Daniele Valverde <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Denivan Campos <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Franklin Silva <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Gláucya Boechat <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Leila Karita <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Luana Martins <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Nailton Almeida <span class="aff-tag">UEFS</span></span>
+        <span class="former-chip">Nildo Silva <span class="aff-tag">UFBA</span></span>
+        <span class="former-chip">Renata Souza <span class="aff-tag">UFBA</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRODUCTION ================= -->
+<section class="production" id="producao">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" data-i18n="production.eyebrow">Scientific production</span>
+      <h2 data-i18n="production.title">Knowledge produced collaboratively.</h2>
+      <p data-i18n="production.subtitle">Our output brings together results built in collaboration, and tracks the group's scientific evolution across journals and conferences.</p>
+    </div>
+
+    <div class="chart-panel">
+      <div class="chart-card">
+        <h4 data-i18n="production.chart.by_year">Publications by year</h4>
+        <div class="sub" data-i18n="production.chart.by_year_sub">Time distribution of registered production</div>
+        <div class="bars">
+          <div class="bar-col"><span class="val">1</span><div class="bar" style="height:9%"></div><span class="yr">2017</span></div>
+          <div class="bar-col"><span class="val">1</span><div class="bar" style="height:9%"></div><span class="yr">2018</span></div>
+          <div class="bar-col"><span class="val">1</span><div class="bar" style="height:9%"></div><span class="yr">2019</span></div>
+          <div class="bar-col"><span class="val">8</span><div class="bar" style="height:62%"></div><span class="yr">2020</span></div>
+          <div class="bar-col"><span class="val">13</span><div class="bar" style="height:100%"></div><span class="yr">2021</span></div>
+          <div class="bar-col"><span class="val">4</span><div class="bar" style="height:31%"></div><span class="yr">2022</span></div>
+          <div class="bar-col"><span class="val">11</span><div class="bar" style="height:85%"></div><span class="yr">2023</span></div>
+          <div class="bar-col"><span class="val">2</span><div class="bar" style="height:16%"></div><span class="yr">2024</span></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h4 data-i18n="production.chart.by_type">Distribution by type</h4>
+        <div class="sub" data-i18n="production.chart.by_type_sub">Journals, conferences &amp; book chapters</div>
+        <div class="donut-wrap">
+          <svg width="120" height="120" viewBox="0 0 42 42">
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--border)" stroke-width="6"></circle>
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--primary)" stroke-width="6"
+              stroke-dasharray="87.8 100" stroke-dashoffset="25" transform="rotate(-90 21 21)"></circle>
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--secondary)" stroke-width="6"
+              stroke-dasharray="9.8 100" stroke-dashoffset="-62.8" transform="rotate(-90 21 21)"></circle>
+            <circle cx="21" cy="21" r="15.9" fill="none" stroke="var(--primary-tint)" stroke-width="6"
+              stroke-dasharray="2.4 100" stroke-dashoffset="-72.6" transform="rotate(-90 21 21)"></circle>
+          </svg>
+          <div class="legend">
+            <div class="item"><span class="dot" style="background:var(--primary)"></span><span><strong>36</strong> <span data-i18n="production.chart.conferences">Conferences &amp; workshops</span></span></div>
+            <div class="item"><span class="dot" style="background:var(--secondary)"></span><span><strong>4</strong> <span data-i18n="production.chart.journals">Journal articles</span></span></div>
+            <div class="item"><span class="dot" style="background:var(--primary-tint)"></span><span><strong>1</strong> <span data-i18n="production.chart.books">Book chapter</span></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pub-controls">
+      <div class="pub-tabs" role="tablist">
+        <button class="tab-btn active" data-filter="all" onclick="filterPubs('all')" data-i18n="production.tabs.all">All</button>
+        <button class="tab-btn" data-filter="journal" onclick="filterPubs('journal')" data-i18n="production.tabs.journals">Journals</button>
+        <button class="tab-btn" data-filter="conference" onclick="filterPubs('conference')" data-i18n="production.tabs.conferences">Conferences</button>
+      </div>
+      <div class="pub-search-wrap" id="pubSearchWrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="pubSearch" class="pub-search" oninput="searchPubs()" data-i18n-placeholder="production.search_placeholder" placeholder="Search by author, title or venue...">
+        <button type="button" class="pub-search-clear" id="pubSearchClear" onclick="clearPubSearch()" aria-label="Clear search">&times;</button>
+      </div>
+    </div>
+
+    <div class="pub-list" id="pubList">
+
+      <div class="pub-year-group" data-year="2024">
+        <div class="pub-year">2024</div>
+        <p class="pub-entry" data-type="conference">LIMA, D.; ALVES, V. A.; QUEIROZ, J. P. F.; LIMA, L.; BEZERRA, C. I. M.; COUTINHO, E.; MACHADO, IVAN. <strong>TERTS: Um tutor de ensino para refatoração de test smells.</strong><span class="venue">32º Workshop sobre Educação em Computação (WEI), 2024, Brasília, DF.</span></p>
+        <p class="pub-entry" data-type="conference">ARANDA, M.; OLIVEIRA, N.; SOARES, E.; RIBEIRO, M.; ROMÃO, D.; PATRIOTA, U.; GHEYI, R.; SOUZA, E.; MACHADO, IVAN. <strong>A Catalog of Transformations to Remove Smells From Natural Language Tests.</strong><span class="venue">EASE 2024, Salerno, Italy.</span></p>
+      </div>
+
+      <div class="pub-year-group" data-year="2023">
+        <div class="pub-year">2023</div>
+        <p class="pub-entry" data-type="conference">MARTINS, L.; CAMPOS, D.; SANTANA, R.; MOTA JR., J.; COSTA, H.; MACHADO, IVAN. <strong>Hearing the voice of experts: Unveiling Stack Exchange communities' knowledge of test smells.</strong><span class="venue">IEEE/ACM CHASE 2023, Melbourne, p. 80.</span></p>
+        <p class="pub-entry" data-type="journal">SANTANA, R.; MARTINS, L.; VIRGÍNIO, T.; ROCHA, L.; COSTA, H.; MACHADO, IVAN. <strong>An empirical evaluation of RAIDE: a semi-automated approach for test smells detection and refactoring.</strong><span class="venue">Science of Computer Programming, v. 1, p. 103013, 2023.</span></p>
+        <p class="pub-entry" data-type="journal">DAMASCENO, H.; BEZERRA, C.; CAMPOS, D.; MACHADO, I.; COUTINHO, E. <strong>Test smell refactoring revisited: what can internal quality attributes and developers' experience tell us?</strong><span class="venue">Journal of Software Engineering Research and Development, v. 11, p. 15, 2023.</span></p>
+        <p class="pub-entry" data-type="conference">CAMPOS, D.; MARTINS, L.; BEZERRA, C.; MACHADO, I. <strong>Investigating Developers' Contributions to Test Smell Survivability: A Study of Open-Source Projects.</strong><span class="venue">CBSoft 2023, Campo Grande - MS.</span></p>
+        <p class="pub-entry" data-type="conference">SOARES, E.; ARANDA, M.; OLIVEIRA, N.; RIBEIRO, M.; GHEYI, R.; SOUZA, E.; MACHADO, IVAN; SANTOS, A.; FONSECA, B.; BONIFÁCIO, R. <strong>Manual Tests Do Smell! Cataloging and Identifying Natural Language Test Smells.</strong><span class="venue">ACM/IEEE ESEM 2023, New Orleans.</span></p>
+        <p class="pub-entry" data-type="conference">SOUSA, É.; BEZERRA, C.; MACHADO, IVAN. <strong>Flaky Tests in UI: Understanding Causes and Applying Correction Strategies.</strong><span class="venue">SBES 2023, Campo Grande, Brazil.</span></p>
+        <p class="pub-entry" data-type="conference">FEITOSA, T. M.; MACHADO, IVAN; MACIEL, R. S. P. <strong>Hybrid Software Development with Scrum: Perceptions of Brazilian Software Practitioners.</strong><span class="venue">SBES 2023, Campo Grande, Brazil.</span></p>
+        <p class="pub-entry" data-type="conference">MARTINS, L.; COSTA, H.; RIBEIRO, M.; PALOMBA, F.; MACHADO, IVAN. <strong>Automating Test-Specific Refactoring Mining: A Mixed-Method Investigation.</strong><span class="venue">IEEE SCAM 2023, Bogotá.</span></p>
+        <p class="pub-entry" data-type="conference">MARTINS, L. A.; PONTILLO, V.; COSTA, H. A. X.; FERRUCCI, F.; PALOMBA, F.; MACHADO, IVAN. <strong>Test Code Refactoring Unveiled: Where and How Does It Affect Test Code Quality and Effectiveness?</strong><span class="venue">39th IEEE ICSME — Registered Reports, 2023, Bogotá.</span></p>
+        <p class="pub-entry" data-type="conference">SILVA, G.; BEZERRA, C.; UCHÔA, A.; MACHADO, IVAN. <strong>What Factors Affect the Build Failures Correction Time? A Multi-Project Study.</strong><span class="venue">SBCARS 2023, Campo Grande, Brazil.</span></p>
+        <p class="pub-entry" data-type="conference">LIMA, R.; BEZERRA, C.; MACHADO, IVAN. <strong>A Self-Adaptation Mechanism for Variability Management in Dynamic Software Product Lines.</strong><span class="venue">SBCARS 2023, Campo Grande, Brazil.</span></p>
+      </div>
+
+      <div class="pub-year-group older" data-year="2022">
+        <div class="pub-year">2022</div>
+        <p class="pub-entry" data-type="conference">SANTANA, R. S.; MARTINS, L. A.; VIRGÍNIO, T.; ROCHA, L.; COSTA, H. A. X.; MACHADO, I. C. <strong>Refactoring Assertion Roulette and Duplicate Assert test smells: a controlled experiment.</strong><span class="venue">XXV CIbSE 2022, virtual mode.</span></p>
+        <p class="pub-entry" data-type="conference">LIMA, S. M. O.; CAMPOS, D.; MACHADO, IVAN. <strong>A thematic synthesis on the adoption of regression testing techniques in Android projects.</strong><span class="venue">SBQS 2022, Curitiba, Brazil.</span></p>
+        <p class="pub-entry" data-type="conference">DAMASCENO, H.; BEZERRA, C.; COUTINHO, E.; MACHADO, IVAN. <strong>Analyzing Test Smells Refactoring from a Developers Perspective.</strong><span class="venue">SBQS 2022, Curitiba, Brazil.</span></p>
+        <p class="pub-entry" data-type="conference">FERNANDES, D.; MACHADO, IVAN; MACIEL, R. <strong>TEMPY: Test Smell Detector for Python.</strong><span class="venue">SBES 2022, Virtual Event, Brazil.</span></p>
+      </div>
+
+      <div class="pub-year-group older" data-year="2021">
+        <div class="pub-year">2021</div>
+        <p class="pub-entry" data-type="conference">MOTA JR., J.; BOECHAT, G.; MACHADO, I. C. <strong>Label it be! A large-scale study of issue labeling in modern open-source repositories.</strong><span class="venue">XXIV CIbSE 2021, Costa Rica.</span></p>
+        <p class="pub-entry" data-type="conference">CAMPOS, D.; ROCHA, L.; MACHADO, I. <strong>Developers' perception on the severity of test smells: an empirical study.</strong><span class="venue">XXIV CIbSE 2021, San José, Costa Rica.</span></p>
+        <p class="pub-entry" data-type="conference">MOTA JR., J.; SANTANA, R.; MACHADO, IVAN. <strong>GrumPy: an automated approach to simplify issue data analysis for newcomers.</strong><span class="venue">SBES 2021, Joinville, Brazil, p. 33.</span></p>
+        <p class="pub-entry" data-type="conference">SANTANA, R.; FERNANDES, D.; CAMPOS, D.; SOARES, L.; MACIEL, R.; MACHADO, IVAN. <strong>Understanding practitioners: strategies to handle test smells — a multi-method study.</strong><span class="venue">SBES 2021, Joinville, Brazil, p. 49.</span></p>
+        <p class="pub-entry" data-type="conference">SILVA JR., N.; COSTA, H.; KARITA, L.; MACHADO, IVAN; SOARES, L. <strong>Experiences and Practices in GUI Functional Testing: A Software Practitioners' View.</strong><span class="venue">SBES 2021, Joinville, Brazil, p. 195.</span></p>
+        <p class="pub-entry" data-type="conference">RODRIGUES, J. P.; MENDONÇA, N.; MACHADO, IVAN. <strong>Lyzeli: a tool for identifying the clues in survey research data.</strong><span class="venue">SBES 2021, Joinville, Brazil, p. 347.</span></p>
+        <p class="pub-entry" data-type="conference">FERNANDES, D.; MACHADO, IVAN; MACIEL, R. <strong>Handling Test Smells in Python: Results from a Mixed-Method Study.</strong><span class="venue">SBES 2021, Joinville, Brazil, p. 84.</span></p>
+        <p class="pub-entry" data-type="conference">MARTINS, L.; BEZERRA, C.; COSTA, H.; MACHADO, IVAN. <strong>Smart prediction for refactorings in the software test code.</strong><span class="venue">SBES 2021, Joinville, Brazil, p. 115.</span></p>
+        <p class="pub-entry" data-type="conference">MARTINS, L.; BRITO, V.; FEITOSA, D.; ROCHA, L.; COSTA, H.; MACHADO, IVAN. <strong>From Blackboard to the Office: A Look Into How Practitioners Perceive Software Testing Education.</strong><span class="venue">EASE 2021, Trondheim, Norway, p. 211.</span></p>
+        <p class="pub-entry" data-type="book">CICO, O.; SOUZA, R.; JACCHERI, L.; NGUYEN DUC, A.; MACHADO, IVAN. <strong>Startups Transitioning from Early to Growth Phase — A Pilot Study of Technical Debt Perception.</strong><span class="venue">Lecture Notes in Business Information Processing, v. 407, p. 102-117, Springer, 2021.</span></p>
+        <p class="pub-entry" data-type="journal">SILVA JR., N. C.; MARTINS, L. A.; SOARES, L. R.; COSTA, H. A. X.; MACHADO, IVAN. <strong>How are test smells treated in the wild? A tale of two empirical studies.</strong><span class="venue">Journal of Software Engineering Research and Development, v. 9, p. 9:1-9:16, 2021.</span></p>
+        <p class="pub-entry" data-type="journal">VIRGÍNIO, T.; SANTANA, R.; MARTINS, L. A.; CRUZ, A. P. S.; SOARES, L. R.; COSTA, H. A. X.; MACHADO, IVAN. <strong>On the test smells detection: an empirical study on the JNose Test accuracy.</strong><span class="venue">Journal of Software Engineering Research and Development, v. 9, p. 8:1-8:14, 2021.</span></p>
+        <p class="pub-entry" data-type="journal">KARITA, L.; MOURÃO, B. C. C.; MARTINS, L. A.; SOARES, L. R.; MACHADO, I. C. <strong>Software industry awareness on sustainable software engineering: a Brazilian perspective.</strong><span class="venue">Journal of Software Engineering Research and Development, v. 9, 2021.</span></p>
+      </div>
+
+      <div class="pub-year-group older" data-year="2020">
+        <div class="pub-year">2020</div>
+        <p class="pub-entry" data-type="conference">VIRGINIO, T. G. A.; MARTINS, L. A.; SOARES, L. R.; SANTANA, R. S.; COSTA, H. A. X.; MACHADO, I. C. <strong>An empirical study of automatically-generated tests from the perspective of test smells.</strong><span class="venue">SBES 2020, Virtual Event.</span></p>
+        <p class="pub-entry" data-type="conference">VIRGINIO, T. G. A.; MARTINS, L. A.; SOARES, L. R.; SANTANA, R. S.; CRUZ, A. P. S.; COSTA, H. A. X.; MACHADO, I. C. <strong>JNose: Java Test Smell Detector.</strong><span class="venue">SBES 2020 — Tools Track, Virtual Event.</span></p>
+        <p class="pub-entry" data-type="conference">SANTANA, R. S.; MARTINS, L. A.; VIRGINIO, T. G. A.; CRUZ, A. P. S.; SOARES, L. R.; COSTA, H. A. X.; MACHADO, I. C. <strong>RAIDE: a tool for Assertion Roulette and Duplicate Assert identification and refactoring.</strong><span class="venue">SBES 2020 — Tools Track, Virtual Event.</span></p>
+        <p class="pub-entry" data-type="conference">MOTA JR., J.; MACHADO, I. C. <strong>Avaliação empírica de termos técnicos em issues de projetos opensource.</strong><span class="venue">CTIC 2020, Cuiabá, MT.</span></p>
+        <p class="pub-entry" data-type="conference">LIMA, S. M. O.; CAMPOS, D.; SOARES, L. R.; MACHADO, IVAN. <strong>Unveiling Practitioners Awareness of Android Apps Regression Testing through an Expert Survey.</strong><span class="venue">SBES 2020, ACM, p. 303-308.</span></p>
+        <p class="pub-entry" data-type="conference">ROCHA, L.; MACHADO, IVAN; ALMEIDA, E.; KÄSTNER, C.; NADI, S. <strong>A semi-automated iterative process for detecting feature interactions.</strong><span class="venue">SBES 2020, Natal, Brazil, p. 778.</span></p>
+        <p class="pub-entry" data-type="conference">SILVA, F.; SOUZA, R.; MACHADO, IVAN. <strong>Taming and Unveiling Software Reuse opportunities through White Label Software in Startups.</strong><span class="venue">Euromicro SEAA 2020, Portoroz, Slovenia.</span></p>
+        <p class="pub-entry" data-type="conference">SILVA JR., N. C.; MARTINS, L. A.; SOARES, L. R.; MACHADO, I. C. <strong>A survey on test practitioners' awareness of test smells.</strong><span class="venue">XXIII CIbSE 2020, Curitiba, Brazil.</span></p>
+      </div>
+
+      <div class="pub-year-group older" data-year="2019">
+        <div class="pub-year">2019</div>
+        <p class="pub-entry" data-type="conference">VIRGÍNIO, T.; SANTANA, R.; MARTINS, L. A.; SOARES, L. R.; COSTA, H.; MACHADO, IVAN. <strong>On the influence of Test Smells on Test Coverage.</strong><span class="venue">SBES 2019, Salvador, p. 467.</span></p>
+      </div>
+
+      <div class="pub-year-group older" data-year="2018">
+        <div class="pub-year">2018</div>
+        <p class="pub-entry" data-type="conference">CAMPOS, D.; LIMA, C.; MACHADO, IVAN. <strong>MERCI — A Method to Evaluate Combinatorial Interaction Testing Tools for Software Product Lines.</strong><span class="venue">XVII SBQS 2018.</span></p>
+      </div>
+
+      <div class="pub-year-group older" data-year="2017">
+        <div class="pub-year">2017</div>
+        <p class="pub-entry" data-type="conference">SILVA, D. C. C.; CARDOSO, M. P. S.; MACHADO, I. C. <strong>Testing Tools for Software Product Lines: A Comparative Analysis.</strong><span class="venue">CBSoft 2017 (WTDSoft session).</span></p>
+      </div>
+
+    </div>
+
+    <p class="pub-empty" id="pubEmpty" data-i18n="production.no_results">No publications match your search.</p>
+
+    <div class="show-more-wrap">
+      <button class="btn btn-ghost" id="showMoreBtn" onclick="toggleOlder()" data-i18n="production.show_more">Show earlier years (2017–2022)</button>
+    </div>
+
+    <!-- TOOLS -->
+    <div class="subsection" id="ferramentas">
+      <div class="subsection-head">
+        <h3 data-i18n="tools.title">Tools we build</h3>
+        <p data-i18n="tools.intro">Open tools developed by researchers at ARIES LAB, several of them born directly from our publications.</p>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-thumb"><img src="https://arieslab.github.io/assets/img/tools/jnose.png" alt="JNose Test" loading="lazy"></div>
+          <div class="tool-body">
+            <h4>JNose Test</h4>
+            <p data-i18n="tools.items.jnose">Automatically detects test smells in test code and collects coverage metrics.</p>
+            <a class="tool-link" href="https://jnosetest.github.io/" target="_blank" rel="noopener" data-i18n="tools.visit">Visit tool →</a>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-thumb"><img src="https://arieslab.github.io/assets/img/tools/raide.png" alt="RAIDE Plugin" loading="lazy"></div>
+          <div class="tool-body">
+            <h4>RAIDE Plugin</h4>
+            <p data-i18n="tools.items.raide">An Eclipse plugin that automatically detects and refactors test smells.</p>
+            <a class="tool-link" href="https://raideplugin.github.io/" target="_blank" rel="noopener" data-i18n="tools.visit">Visit tool →</a>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-thumb"><img src="https://arieslab.github.io/assets/img/tools/viss.png" alt="TSVizzEvolution" loading="lazy"></div>
+          <div class="tool-body">
+            <h4>TSVizzEvolution</h4>
+            <p data-i18n="tools.items.tsvizz">Visualizes test smells and their evolution across software projects.</p>
+            <a class="tool-link" href="https://github.com/arieslab/TSVizzEvolution" target="_blank" rel="noopener" data-i18n="tools.visit">Visit tool →</a>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-thumb"><img src="https://arieslab.github.io/assets/img/tools/lyzeli.png" alt="Lyzeli" loading="lazy"></div>
+          <div class="tool-body">
+            <h4>Lyzeli</h4>
+            <p data-i18n="tools.items.lyzeli">Speeds up qualitative and quantitative analysis of research data — charts, word clouds and more.</p>
+            <a class="tool-link" href="https://arieslab.github.io/lyzeli/#/" target="_blank" rel="noopener" data-i18n="tools.visit">Visit tool →</a>
+          </div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-thumb"><img src="https://arieslab.github.io/assets/img/tools/grumpy.png" alt="GrumPy" loading="lazy"></div>
+          <div class="tool-body">
+            <h4>GrumPy</h4>
+            <p data-i18n="tools.items.grumpy">Facilitates automated collection of issues from GitHub's open-source repositories.</p>
+            <a class="tool-link" href="https://arieslab.github.io/grumpytool/" target="_blank" rel="noopener" data-i18n="tools.visit">Visit tool →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AWARDS -->
+    <div class="subsection" id="premios">
+      <div class="subsection-head">
+        <h3 data-i18n="awards.title">Awards &amp; recognition</h3>
+        <p data-i18n="awards.intro">Distinctions received by the group's papers and members.</p>
+      </div>
+      <div class="awards-grid">
+        <div class="award-card">
+          <img src="https://arieslab.github.io/assets/img/awards/01.jpg" alt="Award" loading="lazy">
+          <div class="award-body">
+            <p data-i18n="awards.items.0.text">The paper <strong>JNose: Java Test Smell Detector</strong> was awarded Best Paper on the Tool Track (SBES 2020).</p>
+            <a href="https://dl.acm.org/doi/10.1145/3422392.3422499" target="_blank" rel="noopener" data-i18n="awards.link">Go to paper →</a>
+          </div>
+        </div>
+        <div class="award-card">
+          <img src="https://arieslab.github.io/assets/img/awards/02.jpg" alt="Award" loading="lazy">
+          <div class="award-body">
+            <p data-i18n="awards.items.1.text">Professor <strong>Ivan Machado</strong> was awarded Best Reviewer of the Education Track (SBES 2020).</p>
+          </div>
+        </div>
+        <div class="award-card">
+          <img src="https://arieslab.github.io/assets/img/awards/03.jpg" alt="Award" loading="lazy">
+          <div class="award-body">
+            <p data-i18n="awards.items.2.text">The paper <strong>A survey on test practitioners' awareness of test smells</strong> was awarded Best Paper at the XXIII CIbSE (2020).</p>
+            <a href="https://arxiv.org/abs/2003.05613" target="_blank" rel="noopener" data-i18n="awards.link">Go to paper →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROJECTS ================= -->
+<section class="projects" id="projetos">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" data-i18n="projects.eyebrow">Projects</span>
+      <h2 data-i18n="projects.title">Research in motion.</h2>
+      <p data-i18n="projects.subtitle">Long-term investigations, funded initiatives and scientific training programs connecting our lines of research.</p>
+    </div>
+    <div class="project-feature">
+      <div class="ic">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20l4-9 3 5 3-8 3 6 3-4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8" cy="11" r="1"/><circle cx="11" cy="16" r="1"/><circle cx="14" cy="8" r="1"/><circle cx="17" cy="14" r="1"/></svg>
+      </div>
+      <div>
+        <h3 data-i18n="projects.card_title">This page is under construction</h3>
+        <p data-i18n="projects.card_text">We're organizing a detailed view of our active and past projects. In the meantime, our publications, tools and awards already reflect the initiatives currently driving the group forward.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA BAND / CONTACT ================= -->
+<section class="cta-band" id="contato">
+  <div class="wrap">
+    <span class="eyebrow" data-i18n="cta.eyebrow">Scientific collaboration</span>
+    <h2 data-i18n="cta.title">Let's investigate what doesn't have an answer yet.</h2>
+    <p data-i18n="cta.text">Projects, advising, academic partnerships and new research questions start with a good conversation.</p>
+    <div class="cta-row">
+      <a href="mailto:ivanmachado@dcc.ufba.br" class="btn btn-primary" data-i18n="cta.email">Get in touch</a>
+      <a href="https://github.com/arieslab" target="_blank" rel="noopener" class="btn btn-ghost" data-i18n="cta.github">GitHub ↗</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand-group">
+          <a href="#" class="brand" aria-label="ARIES LAB Home">
+            <svg style="height: 36px; width: auto;" id="Camada_1" data-name="Camada 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 682.73 193.59">
+            </svg>
+          </a>
+          <div class="divider"></div>
+          <img src="https://raw.githubusercontent.com/arieslab/public-archive/main/ic-aries.svg" alt="IC Logo" style="height: 50px; width: auto;">
+        </div>
+        <p data-i18n="footer.text">Research group of the Institute of Computing, Federal University of Bahia, dedicated to software testing, evolution and empirical software engineering.</p>
+      </div>
+
+      <div class="footer-links">
+        <h5 data-i18n="footer.quicklinks">Quick links</h5>
+        <a href="#pesquisa" data-i18n="nav.research">Research</a>
+        <a href="#pessoas" data-i18n="nav.people">People</a>
+        <a href="#producao" data-i18n="nav.production">Production</a>
+        <a href="#projetos" data-i18n="nav.projects">Projects</a>
+      </div>
+
+      <div class="footer-links">
+        <h5 data-i18n="footer.output">Output</h5>
+        <a href="#producao" data-i18n="production.tabs.all">Publications</a>
+        <a href="#ferramentas" data-i18n="tools.title">Tools</a>
+        <a href="#premios" data-i18n="awards.title">Awards</a>
+        <a href="https://github.com/arieslab" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+
+      <div class="footer-contact">
+        <h5 data-i18n="footer.contact_title" style="font-size:.76rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:14px;">Contact &amp; location</h5>
+        <a class="mail" href="mailto:ivanmachado@dcc.ufba.br">ivanmachado@dcc.ufba.br</a>
+        <address>
+          <span data-i18n="footer.address.line1">Institute of Computing / UFBA</span><br>
+          Avenida Milton Santos, s/n<br>
+          <span data-i18n="footer.address.line3">Campus de Ondina, PAF 2</span><br>
+          CEP 40.170-110 · Salvador, Bahia
+        </address>
+        <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=Instituto+de+Computacao+UFBA+PAF+2+Salvador" target="_blank" rel="noopener" data-i18n="footer.map">View on map ↗</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> ARIES LAB · UFBA · UFLA · UNEB</span>
+      <span data-i18n="footer.rights">All rights reserved.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* THEME */
+let theme = 'light';
+function toggleTheme(){
+  theme = theme === 'light' ? 'dark' : 'light';
+  document.body.setAttribute('data-theme', theme);
+}
+
+/* MOBILE NAV CLOSE ON CLICK */
+document.querySelectorAll('.primary-nav a').forEach(a=>{
+  a.addEventListener('click', ()=>document.getElementById('primaryNav').classList.remove('open'));
+});
+
+/* PUBLICATIONS: FILTER BY TYPE + SEARCH */
+let currentTypeFilter = 'all';
+
+function filterPubs(type){
+  currentTypeFilter = type;
+  document.querySelectorAll('.pub-tabs .tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.filter===type));
+  applyPubFilters();
+}
+
+function searchPubs(){
+  const wrap = document.getElementById('pubSearchWrap');
+  const input = document.getElementById('pubSearch');
+  wrap.classList.toggle('has-value', input.value.trim().length > 0);
+  applyPubFilters();
+}
+
+function clearPubSearch(){
+  const input = document.getElementById('pubSearch');
+  input.value = '';
+  input.focus();
+  searchPubs();
+}
+
+function applyPubFilters(){
+  const input = document.getElementById('pubSearch');
+  const query = input ? input.value.trim().toLowerCase() : '';
+  let anyResult = false;
+
+  document.querySelectorAll('.pub-entry').forEach(p=>{
+    const typeMatch = (currentTypeFilter==='all') || (p.dataset.type===currentTypeFilter);
+    const textMatch = !query || p.textContent.toLowerCase().includes(query);
+    const visible = typeMatch && textMatch;
+    p.setAttribute('data-hidden', visible ? 'false' : 'true');
+    if(visible) anyResult = true;
+  });
+
+  document.querySelectorAll('.pub-year-group').forEach(g=>{
+    const anyVisible = Array.from(g.querySelectorAll('.pub-entry')).some(p=>p.getAttribute('data-hidden')!=='true');
+    g.style.display = anyVisible ? '' : 'none';
+  });
+
+  const emptyMsg = document.getElementById('pubEmpty');
+  if(emptyMsg) emptyMsg.style.display = anyResult ? 'none' : 'block';
+}
+
+/* PUBLICATIONS: SHOW OLDER YEARS */
+let olderShown = false;
+function toggleOlder(){
+  olderShown = !olderShown;
+  document.querySelectorAll('.pub-year-group.older').forEach(g=> g.style.display = olderShown ? '' : 'none');
+  document.getElementById('showMoreBtn').textContent = olderShown
+    ? getPath(translations[lang], 'production.show_less')
+    : getPath(translations[lang], 'production.show_more');
+}
+
+/* PEOPLE TABS LOGIC */
+function switchPeopleTab(tabId) {
+  document.querySelectorAll('.people-tabs .people-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.people-group').forEach(group => group.classList.remove('active'));
+  
+  document.querySelector(`.people-tabs .people-tab-btn[onclick="switchPeopleTab('${tabId}')"]`).classList.add('active');
+  document.getElementById('group-' + tabId).classList.add('active');
+}
+
+/* I18N */
+const translations = {
+en: {
+  a11y:{ skip:"Skip to content" },
+  nav:{ research:"Research", people:"People", production:"Production", projects:"Projects", contact:"Contact" },
+  hero:{
+    eyebrow:"Institute of Computing · UFBA",
+    title:'Turning code into <em>evidence</em>, and evidence into better software.',
+    description:"The Applied Research in Software Engineering Laboratory (ARIES LAB) conducts quality academic investigations that bring relevant contributions to the literature and to the software industry — from testing and refactoring to the tools practitioners use every day.",
+    cta_research:"Explore our research",
+    cta_people:"Meet the group"
+  },
+  collab:{
+    title:"We are a collaborative research group.",
+    text:"ARIES LAB is a research team at the Institute of Computing at Federal University of Bahia (UFBA), together with the Federal University of Lavras (UFLA) and the State University of Bahia (UNEB)."
+  },
+  interests:{
+    eyebrow:"Research lines",
+    title:"From code quality to sustainable software.",
+    subtitle:"Our research interest is related to the following topics:",
+    items:[
+      {title:"Empirical Software Engineering", text:"Involves the scientific use of quantitative and qualitative data to understand and improve the software."},
+      {title:"Software Testing", text:"Searches related to software testing processes with the aim of improving the quality of the software."},
+      {title:"Software Evolution", text:"Area of Software Engineering that investigates the continual development of systems and their changes."},
+      {title:"Mining Software Repositories", text:"Analyzes the rich data available in software repositories to uncover interesting facts about software systems, projects, and software engineering."},
+      {title:"Sustainable Software Engineering", text:"An emerging discipline with principles, philosophies, and competencies to define, develop, and run sustainable software applications."}
+    ]
+  },
+  sponsorship:{
+    eyebrow:"Funding",
+    title:"Our sponsorships.",
+    subtitle:"ARIES LAB members receive funding from CAPES, FAPESB, CNPq and Tomorrow."
+  },
+  people:{
+    eyebrow:"People", title:"Science is collective work.",
+    subtitle:"A community of faculty, students and alumni turning questions into knowledge, tools and rigorous software engineering research.",
+    tabs:{faculty:"Faculty", phd:"Ph.D. Students", msc:"M.Sc. Students", undergrad:"Undergraduates", former:"Alumni"},
+    link:{email:"Email", site:"Website"}
+  },
+  production:{
+    eyebrow:"Scientific production",
+    title:"Knowledge produced collaboratively.",
+    subtitle:"Our output brings together results built in collaboration, and tracks the group's scientific evolution across journals and conferences.",
+    chart:{ by_year:"Publications by year", by_year_sub:"Time distribution of registered production",
+      by_type:"Distribution by type", by_type_sub:"Journals, conferences & book chapters",
+      conferences:"Conferences & workshops", journals:"Journal articles", books:"Book chapter" },
+    tabs:{all:"All", journals:"Journals", conferences:"Conferences"},
+    search_placeholder:"Search by author, title or venue…",
+    no_results:"No publications match your search.",
+    show_more:"Show earlier years (2017–2022)",
+    show_less:"Show fewer years"
+  },
+  tools:{
+    title:"Tools we build",
+    intro:"Open tools developed by researchers at ARIES LAB, several of them born directly from our publications.",
+    visit:"Visit tool →",
+    items:{
+      jnose:"Automatically detects test smells in test code and collects coverage metrics.",
+      raide:"An Eclipse plugin that automatically detects and refactors test smells.",
+      tsvizz:"Visualizes test smells and their evolution across software projects.",
+      lyzeli:"Speeds up qualitative and quantitative analysis of research data — charts, word clouds and more.",
+      grumpy:"Facilitates automated collection of issues from GitHub's open-source repositories."
+    }
+  },
+  awards:{
+    title:"Awards & recognition",
+    intro:"Distinctions received by the group's papers and members.",
+    link:"Go to paper →",
+    items:[
+      {text:'The paper <strong>JNose: Java Test Smell Detector</strong> was awarded Best Paper on the Tool Track (SBES 2020).'},
+      {text:'Professor <strong>Ivan Machado</strong> was awarded Best Reviewer of the Education Track (SBES 2020).'},
+      {text:'The paper <strong>A survey on test practitioners\' awareness of test smells</strong> was awarded Best Paper at the XXIII CIbSE (2020).'}
+    ]
+  },
+  projects:{
+    eyebrow:"Projects", title:"Research in motion.",
+    subtitle:"Long-term investigations, funded initiatives and scientific training programs connecting our lines of research.",
+    card_title:"This page is under construction",
+    card_text:"We're organizing a detailed view of our active and past projects. In the meantime, our publications, tools and awards already reflect the initiatives currently driving the group forward."
+  },
+  cta:{
+    eyebrow:"Scientific collaboration",
+    title:"Let's investigate what doesn't have an answer yet.",
+    text:"Projects, advising, academic partnerships and new research questions start with a good conversation.",
+    email:"Get in touch", github:"GitHub ↗"
+  },
+  footer:{
+    text:"Research group of the Institute of Computing, Federal University of Bahia, dedicated to software testing, evolution and empirical software engineering.",
+    quicklinks:"Quick links", output:"Output", contact_title:"Contact & location",
+    address:{line1:"Institute of Computing / UFBA", line3:"Campus de Ondina, PAF 2"},
+    map:"View on map ↗",
+    rights:"All rights reserved."
+  }
+},
+pt: {
+  a11y:{ skip:"Ir para o conteúdo" },
+  nav:{ research:"Pesquisa", people:"Pessoas", production:"Produção", projects:"Projetos", contact:"Contato" },
+  hero:{
+    eyebrow:"Instituto de Computação · UFBA",
+    title:'Transformando código em <em>evidência</em>, e evidência em software melhor.',
+    description:"O Laboratório de Pesquisa Aplicada em Engenharia de Software (ARIES LAB) conduz investigações acadêmicas de qualidade que trazem contribuições relevantes para a literatura e para a indústria de software — de testes e refatoração até as ferramentas usadas por profissionais no dia a dia.",
+    cta_research:"Explore nossa pesquisa",
+    cta_people:"Conheça o grupo"
+  },
+  collab:{
+    title:"Somos um grupo de pesquisa colaborativo.",
+    text:"O ARIES LAB é um time de pesquisa do Instituto de Computação da Universidade Federal da Bahia (UFBA), em conjunto com a Universidade Federal de Lavras (UFLA) e a Universidade do Estado da Bahia (UNEB)."
+  },
+  interests:{
+    eyebrow:"Linhas de pesquisa",
+    title:"Da qualidade de código à sustentabilidade do software.",
+    subtitle:"Nosso interesse de pesquisa está relacionado aos seguintes temas:",
+    items:[
+      {title:"Engenharia de Software Empírica", text:"Envolve o uso científico de dados quantitativos e qualitativos para compreender e melhorar o software."},
+      {title:"Teste de Software", text:"Investigações relacionadas a processos de teste de software com o objetivo de melhorar a qualidade do software."},
+      {title:"Evolução de Software", text:"Área da Engenharia de Software que investiga o desenvolvimento contínuo dos sistemas e suas mudanças."},
+      {title:"Mineração de Repositórios de Software", text:"Analisa os dados disponíveis em repositórios de software para revelar informações relevantes sobre sistemas, projetos e engenharia de software."},
+      {title:"Engenharia de Software Sustentável", text:"Disciplina emergente com princípios, filosofias e competências para definir, desenvolver e executar aplicações de software sustentáveis."}
+    ]
+  },
+  sponsorship:{
+    eyebrow:"Financiamento",
+    title:"Nossos financiadores.",
+    subtitle:"Os membros do ARIES LAB recebem financiamento da CAPES, FAPESB, CNPq e Tomorrow."
+  },
+  people:{
+    eyebrow:"Pessoas", title:"Ciência é trabalho coletivo.",
+    subtitle:"Uma comunidade de docentes, estudantes e ex-membros que transforma perguntas em conhecimento, ferramentas e pesquisa rigorosa em engenharia de software.",
+    tabs:{faculty:"Pesquisadores", phd:"Doutorandos(as)", msc:"Mestrandos(as)", undergrad:"Graduação", former:"Ex-membros"},
+    link:{email:"E-mail", site:"Site"}
+  },
+  production:{
+    eyebrow:"Produção científica",
+    title:"Conhecimento produzido em rede.",
+    subtitle:"Nossa produção reúne resultados construídos em colaboração e acompanha a evolução científica do grupo em periódicos e conferências.",
+    chart:{ by_year:"Publicações por ano", by_year_sub:"Distribuição temporal da produção registrada",
+      by_type:"Distribution by type", by_type_sub:"Periódicos, conferências e capítulos de livro",
+      conferences:"Conferências e workshops", journals:"Artigos em periódicos", books:"Capítulo de livro" },
+    tabs:{all:"Todas", journals:"Periódicos", conferences:"Conferências"},
+    search_placeholder:"Buscar por autor, título ou local…",
+    no_results:"Nenhuma publicação encontrada para a sua busca.",
+    show_more:"Ver anos anteriores (2017–2022)",
+    show_less:"Ver menos anos"
+  },
+  tools:{
+    title:"Ferramentas que desenvolvemos",
+    intro:"Ferramentas abertas desenvolvidas por pesquisadores(as) do ARIES LAB, várias delas nascidas diretamente de nossas publicações.",
+    visit:"Acessar ferramenta →",
+    items:{
+      jnose:"Detecta automaticamente test smells no código de teste e coleta métricas de cobertura.",
+      raide:"Plugin para Eclipse que detecta e refatora test smells de forma automatizada.",
+      tsvizz:"Visualiza test smells e sua evolução ao longo de projetos de software.",
+      lyzeli:"Acelera a análise qualitativa e quantitativa de dados de pesquisa: gráficos, nuvens de palavras e muito mais.",
+      grumpy:"Facilita a coleta automatizada de issues em repositórios open-source do GitHub."
+    }
+  },
+  awards:{
+    title:"Prêmios e reconhecimentos",
+    intro:"Distinções recebidas pelos artigos e membros do grupo.",
+    link:"Ver artigo →",
+    items:[
+      {text:'O artigo <strong>JNose: Java Test Smell Detector</strong> foi premiado como Melhor Artigo na Trilha de Ferramentas (SBES 2020).'},
+      {text:'O professor <strong>Ivan Machado</strong> foi premiado como Melhor Revisor da Trilha de Educação (SBES 2020).'},
+      {text:'O artigo <strong>A survey on test practitioners\' awareness of test smells</strong> foi premiado como Melhor Artigo no XXIII CIbSE (2020).'}
+    ]
+  },
+  projects:{
+    eyebrow:"Projetos", title:"Pesquisa em movimento.",
+    subtitle:"Investigações de longo prazo, iniciativas financiadas e programas de formação científica que conectam nossas linhas de pesquisa.",
+    card_title:"Esta página está em construção",
+    card_text:"Estamos organizando uma visão detalhada dos nossos projetos ativos e concluídos. Enquanto isso, nossas publicações, ferramentas e prêmios já refletem as iniciativas que movem o grupo."
+  },
+  cta:{
+    eyebrow:"Colaboração científica",
+    title:"Vamos investigar o que ainda não tem resposta.",
+    text:"Projetos, orientação, parcerias acadêmicas e novas perguntas de pesquisa começam com uma boa conversa.",
+    email:"Entre em contato", github:"GitHub ↗"
+  },
+  footer:{
+    text:"Grupo de pesquisa do Instituto de Computação da Universidade Federal da Bahia, dedicado a teste, evolução e engenharia de software empírica.",
+    quicklinks:"Links rápidos", output:"Produção", contact_title:"Contato e localização",
+    address:{line1:"Instituto de Computação / UFBA", line3:"Campus de Ondina, PAF 2"},
+    map:"Ver no mapa ↗",
+    rights:"Todos os direitos reservados."
+  }
+}
+};
+
+function getPath(obj, path){
+  return path.split('.').reduce((o,k)=> (o && o[k]!==undefined) ? o[k] : undefined, obj);
+}
+
+let lang = 'en';
+function setLang(l){
+  lang = l;
+  document.documentElement.lang = l==='en' ? 'en' : 'pt-BR';
+  document.getElementById('lang-en').classList.toggle('active', l==='en');
+  document.getElementById('lang-pt').classList.toggle('active', l==='pt');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    const val = getPath(translations[l], key);
+    if(val !== undefined) el.innerHTML = val;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+    const key = el.getAttribute('data-i18n-placeholder');
+    const val = getPath(translations[l], key);
+    if(val !== undefined) el.setAttribute('placeholder', val);
+  });
+  document.getElementById('showMoreBtn').textContent = olderShown
+    ? getPath(translations[l], 'production.show_less')
+    : getPath(translations[l], 'production.show_more');
+}
+setLang('en');
+</script>
+</body>
+</html>
